@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 
+//use Auth;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +15,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+Route::get('/user', function () {
+
+    return response()->json([$user]);
+})->middleware('auth.api');
+
+Route::middleware(['auth.api'])->group(function () {
+    Route::post('/add-record', 'RecordController@add');
+    Route::get('/fetch', 'RecordController@fetch');
+    Route::get('/get/{id}', 'RecordController@get');
+    
 });
+
+

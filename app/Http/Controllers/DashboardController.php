@@ -8,6 +8,9 @@ class DashboardController extends Controller
 {
     //
     public function index(){
-        return view('layout_dashboard');
+        $user = auth()->user();
+        $authToken = $user->api_token;
+        $data = compact('authToken');
+        return view('layout_dashboard',$data);
     }
 }

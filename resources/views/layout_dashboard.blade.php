@@ -2,6 +2,7 @@
 @section('content')
     <!-- dashboard_body -->
     <!-- Top navbar -->
+    <div id="app">
     <div class="main-content">
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
         <div class="container-fluid">
@@ -18,6 +19,8 @@
                     </div>
                 </div>
             </form>
+
+            <a class="btn" style="color: #f8fafc;" data-toggle="modal" data-target="#myModal">New Record</a>
             <!-- User -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">
@@ -41,15 +44,16 @@
                         </a>
                         <a href="./examples/profile.html" class="dropdown-item">
                             <i class="ni ni-settings-gear-65"></i>
-                            <span>Settings</span>
+                            <span>New Hymn Record</span>
                         </a>
                         <a href="./examples/profile.html" class="dropdown-item">
                             <i class="ni ni-calendar-grid-58"></i>
                             <span>Activity</span>
                         </a>
+                        </a>
                         <a href="./examples/profile.html" class="dropdown-item">
                             <i class="ni ni-support-16"></i>
-                            <span>Support</span>
+                            <span>@{{message}}</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#!" class="dropdown-item">
@@ -154,10 +158,49 @@
                 </div>
             </div>
         </div>
-    <div id="app">
         <router-view></router-view>
     </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Hymn Record</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="alert alert-danger" v-if="errors.length > 0">
+                                <span>@{{errors.join(',')}}</span>
+                            </div>
+                            <div class="alert alert-success" v-if="status == 2">
+                                <span>@{{message}}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Processed JSON</label>
+                               <textarea class="form-control" style="height: 200px;" v-model = "data"></textarea>
+                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+                           <!-- <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            </div>-->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="addRecord()">
+                            <span v-if = "status != 1">Save changes</span>
+                            <span v-if = "status == 1">Processing</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+    </div>
     @endsection
 @section('footer')
     <div id="footer" style="padding-right:40px;padding-left:40px;">
@@ -189,8 +232,9 @@
     </div>
 @endsection
 
-
-
 @section('scripts')
+    <script>
+        var authToken = '{{$authToken}}';
+    </script>
     <script type="text/javascript" src="/js/app.js"></script>
 @endsection

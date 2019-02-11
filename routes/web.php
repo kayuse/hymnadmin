@@ -21,4 +21,4 @@ Route::post('/login','Auth\LoginController@login')->name('login.post');
 
 //Route::get('/home','DashboardController@index')->middleware('auth');
 
-Route::get('/home/{vue_capture?}', "DashboardController@index")->where('vue_capture', '[\/\w\.-]*');
+Route::get('/home/{vue_capture?}', "DashboardController@index")->middleware('auth')->where('vue_capture', '[\/\w\.-]*');
