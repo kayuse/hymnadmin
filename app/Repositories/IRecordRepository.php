@@ -10,4 +10,5 @@ interface IRecordRepository extends IBaseRepository
 {
     public function newRecord(string $data);
     public function fetch($page);
+    public function disable($id);
 }

@@ -7,17 +7,17 @@
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="./index.html">Dashboard</a>
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="{{route('home')}}">Dashboard</a>
             <!-- Form -->
             <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-                <div class="form-group mb-0">
+              <!--  <div class="form-group mb-0">
                     <div class="input-group input-group-alternative">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                         </div>
-                        <input class="form-control" placeholder="Search" type="text">
+                    <input class="form-control" placeholder="Search" type="text">
                     </div>
-                </div>
+                </div>-->
             </form>
 
             <a class="btn" style="color: #f8fafc;" data-toggle="modal" data-target="#myModal">New Record</a>
@@ -27,10 +27,9 @@
                     <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="media align-items-center">
                 <span class="avatar avatar-sm rounded-circle">
-                  <img alt="Image placeholder" src="">
                 </span>
                             <div class="media-body ml-2 d-none d-lg-block">
-                                <span class="mb-0 text-sm  font-weight-bold">Jessica Jones</span>
+                                <span class="mb-0 text-sm  font-weight-bold">{{$user->name}}</span>
                             </div>
                         </div>
                     </a>
@@ -56,7 +55,7 @@
                             <span>@{{message}}</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#!" class="dropdown-item">
+                        <a href="{{route('logout')}}" class="dropdown-item">
                             <i class="ni ni-user-run"></i>
                             <span>Logout</span>
                         </a>
@@ -75,7 +74,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Records</h5>
+                                            <h5 class="card-title text-uppercase text-muted mb-0">    <router-link :to="{ name: 'Home'}"> Records </router-link></h5>
                                             <span class="h2 font-weight-bold mb-0" v-html="stats.recordCount"></span>
                                         </div>
                                         <div class="col-auto">
@@ -84,10 +83,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="mt-3 mb-0 text-muted text-sm">
-                                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                        <span class="text-nowrap">Since last month</span>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -96,8 +91,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Hymns</h5>
-                                            <span class="h2 font-weight-bold mb-0">2,356</span>
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Completed Hymns</h5>
+                                            <span class="h2 font-weight-bold mb-0" v-html="stats.hymnCount"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -105,10 +100,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="mt-3 mb-0 text-muted text-sm">
-                                        <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
-                                        <span class="text-nowrap">Since last week</span>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +109,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <h5 class="card-title text-uppercase text-muted mb-0">Verses</h5>
-                                            <span class="h2 font-weight-bold mb-0">924</span>
+                                            <span class="h2 font-weight-bold mb-0" v-html="stats.verseCount">924</span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -126,10 +117,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="mt-3 mb-0 text-muted text-sm">
-                                        <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                                        <span class="text-nowrap">Since yesterday</span>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -138,8 +125,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
-                                            <span class="h2 font-weight-bold mb-0">49,65%</span>
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Performance Today</h5>
+                                            <span class="h2 font-weight-bold mb-0" v-html="(stats.performance / 20) * 100"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -147,10 +134,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                  <!--  <p class="mt-3 mb-0 text-muted text-sm">
                                         <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
                                         <span class="text-nowrap">Since last month</span>
-                                    </p>
+                                    </p>-->
                                 </div>
                             </div>
                         </div>

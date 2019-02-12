@@ -24,7 +24,7 @@ class HymnController extends Controller
             $response = $this->respository->saveHymn($data,$recordId);
             return response()->json($response);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+            return response()->json(['message' => $e->getMessage() . $e->getTrace(), 'status' => -1], 500);
         }
     }
 }

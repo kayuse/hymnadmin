@@ -55,16 +55,17 @@ const app = new Vue({
         response: null,
         message: "",
         stats : {
-            recordCount : 0,
-            hymnCount : 0,
-            versesCount : 0,
-            performance : 0,
+            recordCount : "",
+            hymnCount : "",
+            verseCount : "",
+            performance : "",
         },
     },
     mounted(){
         this.axios = axios.create({
             headers: {'api_token': authToken}
         })
+        this.getStats();
     },
     methods: {
         addRecord: function () {
@@ -90,6 +91,18 @@ const app = new Vue({
                 this.status = 3;
                this.errors.push("Error in processing records");
             });
+        },
+        getStats : function(){
+            this.axios.get('/api/dashboard/stats').then((response) => {
+               let data = response.data;
+               if(data.status == 1){
+                   this.stats.recordCount = data.data.recordCount;
+                   this.stats.hymnCount = data.data.hymnCount;
+                   this.stats.verseCount = data.data.verseCount;
+                   this.stats.performance = data.data.todayHymnCount;
+
+               }
+            })
         }
     }
 });

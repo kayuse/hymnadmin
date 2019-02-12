@@ -23,7 +23,20 @@ class HymnRepository extends BaseRepository implements IHymnRepository
     public function getStats()
     {
         // TODO: Implement getStats() method.
+        $hymnCount = $this->model->count();
+        $recordCount = Record::count();
+        $verseCount = Verse::count();
+        $todayHymnCount = $this->model->whereDate('created_at', '=', date('Y-m-d'))
+            ->where('user_id', Auth::user()->id)->count();
 
+        $response = [
+            'hymnCount' => $hymnCount,
+            'recordCount' => $recordCount,
+            'verseCount' => $verseCount,
+            'todayHymnCount' => $todayHymnCount
+        ];
+
+        return $response;
     }
 
     public function saveHymn($data, $recordId = null)

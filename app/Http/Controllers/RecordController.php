@@ -38,6 +38,17 @@ class RecordController extends Controller
         }
     }
 
+    public function disable(Request $request)
+    {
+        try {
+            $id = $request->id;
+           $response =  $this->repository->disable($id);
+            return response()->json(['status' => 1, 'data' => $response]);
+        } catch (Exception $e) {
+            return response("", 500)->json(['status' => -1, 'message' => 'Error in processing request']);
+        }
+    }
+
     public function fetch(Request $request)
     {
         $page = $request->page != null ?: 1;

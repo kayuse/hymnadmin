@@ -207,7 +207,7 @@
                 this.axios.get('/api/fetch?page='+this.page).then(response => {
                     let data = response.data.data.data;
                     let concatData = this.hymns.concat(data);
-                    console.log(concatData);
+                    //console.log(concatData);
                     this.hymns = concatData;
                     this.loading = false;
                     this.page++;

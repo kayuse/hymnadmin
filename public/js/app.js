@@ -2016,9 +2016,9 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.get('/api/fetch?page=' + this.page).then(function (response) {
         var data = response.data.data.data;
 
-        var concatData = _this2.hymns.concat(data);
+        var concatData = _this2.hymns.concat(data); //console.log(concatData);
 
-        console.log(concatData);
+
         _this2.hymns = concatData;
         _this2.loading = false;
         _this2.page++;
@@ -2228,6 +2228,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -2250,6 +2260,7 @@ __webpack_require__.r(__webpack_exports__);
         extra: "",
         chorus: "",
         enabled: false,
+        disabled: false,
         verses: []
       },
       axios: null,
@@ -2258,6 +2269,7 @@ __webpack_require__.r(__webpack_exports__);
       status: 0,
       uploadProcessing: 0,
       uploadProcessed: false,
+      disableProcessing: false,
       id: 0
     };
   },
@@ -2271,6 +2283,8 @@ __webpack_require__.r(__webpack_exports__);
         var data = response.data.data;
         _this.hymn.title = data.title;
         _this.hymn.extra = data.extra;
+        _this.hymn.enabled = data.enabled;
+        _this.hymn.disabled = data.disabled;
         _this.hymn.number = data.number;
 
         _this.processVerses(data.data);
@@ -2285,8 +2299,7 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var key in content) {
         if (content.hasOwnProperty(key)) {
-          console.log(key);
-
+          //console.log(key);
           if (key.toLowerCase() == "egbe") {
             this.hymn.chorus = content[key];
             continue;
@@ -2317,7 +2330,7 @@ __webpack_require__.r(__webpack_exports__);
     upload: function upload(e) {
       var _this2 = this;
 
-      if (this.uploadProcessed) {
+      if (this.uploadProcessed || this.hymn.enabled || this.hymn.disabled) {
         return;
       }
 
@@ -2326,7 +2339,7 @@ __webpack_require__.r(__webpack_exports__);
         hymn: this.hymn,
         record_id: this.id
       };
-      this.axios.post("/api/create-hymn", data).then(function (response) {
+      this.axios.post("/api/hymn/create-hymn", data).then(function (response) {
         var responseData = response.data;
 
         if (responseData.status == 0) {
@@ -2338,9 +2351,48 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.uploadProcessing = 2;
         _this2.uploadProcessed = true;
+        _this2.hymn.enabled = true;
       }).catch(function (error) {
         return console.log(error);
       });
+    },
+    disable: function disable() {
+      var _this3 = this;
+
+      if (this.hymn.disabled == true || this.hymn.enabled) {
+        return;
+      }
+
+      var data = {
+        'id': this.id
+      };
+      this.axios.post('/api/disable', data).then(function (response) {
+        var data = response.data;
+
+        if (data.status == 1) {
+          _this3.hymn.disabled = true;
+        }
+      });
+    },
+    next: function next() {
+      var id = parseInt(this.id) + 1;
+      this.$router.push({
+        name: "HymnDetails",
+        params: {
+          id: id
+        }
+      });
+    },
+    prev: function prev() {
+      if (this.id > 1) {
+        var id = parseInt(this.id) - 1;
+        this.$router.push({
+          name: "HymnDetails",
+          params: {
+            id: id
+          }
+        });
+      }
     }
   }
 });
@@ -4159,9 +4211,9 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _vm.uploadProcessed
+            _vm.uploadProcessed || _vm.hymn.enabled
               ? _c("div", { staticClass: "alert alert-success" }, [
-                  _vm._v("Success!\n            "),
+                  _vm._v("\n            Success!\n            "),
                   _c("span", [
                     _vm._v("This hymn has been processed successfully.")
                   ])
@@ -4170,8 +4222,15 @@ var render = function() {
             _vm._v(" "),
             _vm.errors.length > 0
               ? _c("div", { staticClass: "alert alert-danger" }, [
-                  _vm._v("Error!\n            "),
+                  _vm._v("\n            Error!\n            "),
                   _c("span", [_vm._v(_vm._s(_vm.errors.join(",")))])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.hymn.disabled
+              ? _c("div", { staticClass: "alert alert-warning" }, [
+                  _vm._v("\n            Alert!\n            "),
+                  _c("span", [_vm._v("This Record has been disabled")])
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -4419,9 +4478,34 @@ var render = function() {
                         attrs: { id: "button_submit" }
                       },
                       [
-                        _c("button", { staticClass: "btn btn-danger" }, [
-                          _vm._v("Disable")
-                        ]),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { href: "#button_submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.disable()
+                              }
+                            }
+                          },
+                          [
+                            !_vm.disableProcessing && !_vm.hymn.disabled
+                              ? _c("span", [_vm._v("Disable")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.disableProcessing
+                              ? _c("span", [
+                                  _vm._v("Disabling  "),
+                                  _c("i", { staticClass: "fa fa-spinner" })
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.hymn.disabled
+                              ? _c("span", [_vm._v("Disabled")])
+                              : _vm._e()
+                          ]
+                        ),
                         _vm._v(" "),
                         _c(
                           "a",
@@ -4435,7 +4519,7 @@ var render = function() {
                             }
                           },
                           [
-                            _vm.uploadProcessing == 0
+                            _vm.uploadProcessing == 0 && !_vm.hymn.enabled
                               ? _c("span", [_vm._v("Upload Hymn")])
                               : _vm._e(),
                             _vm._v(" "),
@@ -4443,7 +4527,7 @@ var render = function() {
                               ? _c("span", [_vm._v("Processing")])
                               : _vm._e(),
                             _vm._v(" "),
-                            _vm.uploadProcessing == 2
+                            _vm.uploadProcessing == 2 || _vm.hymn.enabled
                               ? _c("span", [_vm._v("Processed")])
                               : _vm._e()
                           ]
@@ -4473,10 +4557,10 @@ var render = function() {
                   "a",
                   {
                     staticClass: "btn btn-sm btn-primary",
-                    attrs: { href: "#!" },
+                    attrs: { href: "" },
                     on: {
                       click: function($event) {
-                        _vm.newVerse()
+                        _vm.prev()
                       }
                     }
                   },
@@ -4498,10 +4582,10 @@ var render = function() {
                   "a",
                   {
                     staticClass: "btn btn-sm btn-success",
-                    attrs: { href: "#!" },
+                    attrs: { href: "" },
                     on: {
                       click: function($event) {
-                        _vm.addChorus()
+                        _vm.next()
                       }
                     }
                   },
@@ -4580,10 +4664,10 @@ var render = function() {
                   "a",
                   {
                     staticClass: "btn btn-sm btn-primary",
-                    attrs: { href: "#!" },
+                    attrs: { href: "" },
                     on: {
                       click: function($event) {
-                        _vm.newVerse()
+                        _vm.prev()
                       }
                     }
                   },
@@ -4603,10 +4687,10 @@ var render = function() {
                   "a",
                   {
                     staticClass: "btn btn-sm btn-success",
-                    attrs: { href: "#!" },
+                    attrs: { href: "" },
                     on: {
                       click: function($event) {
-                        _vm.addChorus()
+                        _vm.next()
                       }
                     }
                   },
@@ -18592,10 +18676,10 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
     status: 0,
     response: null
   }, _defineProperty(_data, "message", ""), _defineProperty(_data, "stats", {
-    recordCount: 0,
-    hymnCount: 0,
-    versesCount: 0,
-    performance: 0
+    recordCount: "",
+    hymnCount: "",
+    verseCount: "",
+    performance: ""
   }), _data),
   mounted: function mounted() {
     this.axios = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
@@ -18603,6 +18687,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
         'api_token': authToken
       }
     });
+    this.getStats();
   },
   methods: {
     addRecord: function addRecord() {
@@ -18636,6 +18721,20 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
         _this.status = 3;
 
         _this.errors.push("Error in processing records");
+      });
+    },
+    getStats: function getStats() {
+      var _this2 = this;
+
+      this.axios.get('/api/dashboard/stats').then(function (response) {
+        var data = response.data;
+
+        if (data.status == 1) {
+          _this2.stats.recordCount = data.data.recordCount;
+          _this2.stats.hymnCount = data.data.hymnCount;
+          _this2.stats.verseCount = data.data.verseCount;
+          _this2.stats.performance = data.data.todayHymnCount;
+        }
       });
     }
   }

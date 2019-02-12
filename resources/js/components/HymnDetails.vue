@@ -15,11 +15,17 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="alert alert-success" v-if="uploadProcessed">Success!
+            <div class="alert alert-success" v-if="uploadProcessed || hymn.enabled">
+              Success!
               <span>This hymn has been processed successfully.</span>
             </div>
-            <div class="alert alert-danger" v-if="errors.length > 0">Error!
+            <div class="alert alert-danger" v-if="errors.length > 0">
+              Error!
               <span>{{errors.join(",")}}</span>
+            </div>
+             <div class="alert alert-warning" v-if="hymn.disabled">
+              Alert!
+              <span>This Record has been disabled</span>
             </div>
             <form>
               <h6 class="heading-small text-muted mb-4">Hymn information</h6>
@@ -71,14 +77,14 @@
               <hr class="my-4">
               <!-- Description -->
               <div v-if="hymn.chorus != '' || isAddChorus">
-                <h6 class="heading-small text-muted mb-4" v-if>
+                <h6 class="heading-small text-muted mb-4">
                   Chorus
                   <a v-on:click="deleteChorus()" class="small del" style="float: right;">
                     <i class="fa fa-times"></i> Delete
                   </a>
                 </h6>
 
-                <div class="pl-lg-4" v-if>
+                <div class="pl-lg-4">
                   <div class="form-group">
                     <wysiwyg v-model="hymn.chorus"/>
                   </div>
@@ -104,11 +110,15 @@
               </div>
               <div class="row right--2" style="float: right;">
                 <div class="col-lg-12 right--1" id="button_submit">
-                  <button class="btn btn-danger">Disable</button>
+                  <a href="#button_submit" class="btn btn-danger" v-on:click="disable()">
+                      <span v-if="!disableProcessing && !hymn.disabled">Disable</span>
+                      <span v-if="disableProcessing">Disabling  <i class="fa fa-spinner"></i></span>
+                      <span v-if = "hymn.disabled">Disabled</span>
+                      </a>
                   <a class="btn btn-facebook" href="#button_submit" v-on:click="upload()">
-                    <span v-if="uploadProcessing == 0">Upload Hymn</span>
+                    <span v-if="uploadProcessing == 0 && !hymn.enabled">Upload Hymn</span>
                     <span v-if="uploadProcessing == 1">Processing</span>
-                    <span v-if="uploadProcessing == 2">Processed</span>
+                    <span v-if="uploadProcessing == 2 || hymn.enabled">Processed</span>
                   </a>
                 </div>
               </div>
@@ -120,7 +130,7 @@
         <div class="card card-profile shadow">
           <div class="row justify-content-center">
             <div class="col-lg-3 col-sm-2 order-lg-2 text-center" style="padding:23px;">
-              <a href="#!" class="btn btn-sm btn-primary" v-on:click="newVerse()">
+              <a href="" class="btn btn-sm btn-primary" v-on:click="prev()">
                 <i class="fa fa-angle-left"></i>
               </a>
             </div>
@@ -130,7 +140,7 @@
               </div>
             </div>
             <div class="col-lg-3 col-sm-2 order-lg-2 text-center" style="padding:23px;">
-              <a href="#!" class="btn btn-sm btn-success" v-on:click="addChorus()">
+              <a href="" class="btn btn-sm btn-success" v-on:click="next()">
                 <i class="fa fa-angle-right"></i>
               </a>
             </div>
@@ -161,12 +171,12 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-lg-6 col-sm-6 order-lg-2 text-center" style="padding:23px;">
-              <a href="#!" class="btn btn-sm btn-primary" v-on:click="newVerse()">
+              <a href="" class="btn btn-sm btn-primary" v-on:click="prev()">
                 <i class="fa fa-angle-left"></i>
               </a>
             </div>
             <div class="col-lg-6 col-sm-2 order-lg-2 text-center" style="padding:23px;">
-              <a href="#!" class="btn btn-sm btn-success" v-on:click="addChorus()">
+              <a href="" class="btn btn-sm btn-success" v-on:click="next()">
                 <i class="fa fa-angle-right"></i>
               </a>
             </div>
@@ -201,6 +211,7 @@ export default {
         extra: "",
         chorus: "",
         enabled: false,
+        disabled : false,
         verses: []
       },
       axios: null,
@@ -209,6 +220,7 @@ export default {
       status: 0,
       uploadProcessing: 0,
       uploadProcessed: false,
+      disableProcessing : false,
       id: 0
     };
   },
@@ -222,6 +234,8 @@ export default {
           let data = response.data.data;
           this.hymn.title = data.title;
           this.hymn.extra = data.extra;
+          this.hymn.enabled = data.enabled;
+          this.hymn.disabled = data.disabled;
           this.hymn.number = data.number;
           this.processVerses(data.data);
         })
@@ -234,7 +248,7 @@ export default {
       let content = JSON.parse(data);
       for (let key in content) {
         if (content.hasOwnProperty(key)) {
-          console.log(key);
+          //console.log(key);
           if (key.toLowerCase() == "egbe") {
             this.hymn.chorus = content[key];
             continue;
@@ -261,14 +275,14 @@ export default {
       this.isAddChorus = false;
     },
     upload: function(e) {
-      if (this.uploadProcessed) {
+      if (this.uploadProcessed || this.hymn.enabled || this.hymn.disabled) {
         return;
       }
 
       this.uploadProcessing = 1;
       let data = { hymn: this.hymn, record_id: this.id };
       this.axios
-        .post("/api/create-hymn", data)
+        .post("/api/hymn/create-hymn", data)
         .then(response => {
           let responseData = response.data;
           if (responseData.status == 0) {
@@ -278,8 +292,32 @@ export default {
           }
           this.uploadProcessing = 2;
           this.uploadProcessed = true;
+          this.hymn.enabled = true;
         })
         .catch(error => console.log(error));
+    },
+    disable : function (){
+        if(this.hymn.disabled == true || this.hymn.enabled){
+            return;
+        }
+        let data = {'id': this.id};
+        this.axios.post('/api/disable',data).then((response)=>{
+           let data = response.data;
+           if(data.status == 1 ){
+               this.hymn.disabled = true;
+           }
+        })
+    },
+    next: function() {
+        let id = parseInt(this.id) + 1;
+
+      this.$router.push({ name: "HymnDetails", params: { id }});
+    },
+    prev: function() {
+      if (this.id > 1) {
+           let id = parseInt(this.id) - 1;
+        this.$router.push({ name: "HymnDetails", params: { id } });
+      }
     }
   }
 };
