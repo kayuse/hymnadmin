@@ -17,10 +17,10 @@ class CheckUser
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->header('api_token')) {
+        if (!$request->header('apiToken')) {
             return response('Api Token doesn\'t exist', 401);
         }
-        $apiToken = $request->header('api_token');
+        $apiToken = $request->header('apiToken');
         $user = User::where('api_token', $apiToken)->first();
         if (!$user) {
             return response('Invalid User', 401);

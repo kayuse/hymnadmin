@@ -64,7 +64,7 @@ const app = new Vue({
     },
     mounted(){
         this.axios = axios.create({
-            headers: {'api_token': authToken}
+            headers: {'apiToken': authToken}
         })
         this.getStats();
         this.$events.listen('reloadStats', eventData => this.getStats());

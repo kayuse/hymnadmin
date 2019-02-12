@@ -198,7 +198,7 @@ export default {
   mounted() {
     this.$events.listen("newRecord", eventData => console.log("hi"));
     this.axios = axios.create({
-      headers: { api_token: authToken }
+      headers: { 'apiToken': authToken }
     });
     this.getHymn();
   },

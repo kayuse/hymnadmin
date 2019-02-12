@@ -187,7 +187,7 @@
         mounted() {
             this.$events.listen('newRecord', eventData => this.updateRecords());
             this.axios = axios.create({
-                headers: {'api_token': authToken}
+                headers: {'apiToken': authToken}
             });
             this.getLatestHymns();
         }, data: function () {
