@@ -28,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
         //
         $this->app->bind(\App\Repositories\IRecordRepository::class, \App\Repositories\RecordRepository::class);
         $this->app->bind(\App\Repositories\IBaseRepository::class, \App\Repositories\BaseRepository::class);
+        $this->app->bind(\App\Repositories\IHymnRepository::class, \App\Repositories\HymnRepository::class);
     }
+
     public function bindInterfaces()
     {
 

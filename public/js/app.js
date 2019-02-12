@@ -1978,6 +1978,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -1997,7 +2000,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       message: 'Hi Bro',
       hymns: [],
-      axios: null
+      axios: null,
+      page: 1,
+      loading: false
     };
   },
   methods: {
@@ -2007,9 +2012,16 @@ __webpack_require__.r(__webpack_exports__);
     getLatestHymns: function getLatestHymns() {
       var _this2 = this;
 
-      this.axios.get('/api/fetch').then(function (response) {
+      this.loading = true;
+      this.axios.get('/api/fetch?page=' + this.page).then(function (response) {
         var data = response.data.data.data;
-        _this2.hymns = data;
+
+        var concatData = _this2.hymns.concat(data);
+
+        console.log(concatData);
+        _this2.hymns = concatData;
+        _this2.loading = false;
+        _this2.page++;
       });
     },
     getHymns: function getHymns() {
@@ -2144,32 +2156,109 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    this.$events.listen('newRecord', function (eventData) {
-      return console.log('hi');
+    this.$events.listen("newRecord", function (eventData) {
+      return console.log("hi");
     });
     this.axios = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
       headers: {
-        'api_token': authToken
+        api_token: authToken
       }
     });
     this.getHymn();
   },
   data: function data() {
     return {
-      message: 'Hi Bro',
+      message: "Hi Bro",
       hymn: {
         title: "",
         number: "",
         extra: "",
         chorus: "",
+        enabled: false,
         verses: []
       },
       axios: null,
       errors: [],
-      status: 0
+      isAddChorus: false,
+      status: 0,
+      uploadProcessing: 0,
+      uploadProcessed: false,
+      id: 0
     };
   },
   methods: {
@@ -2177,15 +2266,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var id = this.$route.params.id;
-      this.axios.get('/api/get/' + id).then(function (response) {
+      this.id = id;
+      this.axios.get("/api/get/" + id).then(function (response) {
         var data = response.data.data;
         _this.hymn.title = data.title;
         _this.hymn.extra = data.extra;
         _this.hymn.number = data.number;
 
         _this.processVerses(data.data);
-
-        console.log(data);
       }).catch(function (error) {
         _this.status = 2;
 
@@ -2197,6 +2285,8 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var key in content) {
         if (content.hasOwnProperty(key)) {
+          console.log(key);
+
           if (key.toLowerCase() == "egbe") {
             this.hymn.chorus = content[key];
             continue;
@@ -2209,6 +2299,48 @@ __webpack_require__.r(__webpack_exports__);
     deleteHymn: function deleteHymn(i) {
       console.log(i);
       this.hymn.verses.splice(i, 1);
+    },
+    newVerse: function newVerse() {
+      this.hymn.verses.push("");
+    },
+    addChorus: function addChorus() {
+      if (this.isAddChorus) {
+        return;
+      }
+
+      this.isAddChorus = true;
+    },
+    deleteChorus: function deleteChorus() {
+      this.hymn.chorus = "";
+      this.isAddChorus = false;
+    },
+    upload: function upload(e) {
+      var _this2 = this;
+
+      if (this.uploadProcessed) {
+        return;
+      }
+
+      this.uploadProcessing = 1;
+      var data = {
+        hymn: this.hymn,
+        record_id: this.id
+      };
+      this.axios.post("/api/create-hymn", data).then(function (response) {
+        var responseData = response.data;
+
+        if (responseData.status == 0) {
+          _this2.errors.push(responseData.message);
+
+          _this2.uploadProcessing = 0;
+          return;
+        }
+
+        _this2.uploadProcessing = 2;
+        _this2.uploadProcessed = true;
+      }).catch(function (error) {
+        return console.log(error);
+      });
     }
   }
 });
@@ -3673,7 +3805,35 @@ var render = function() {
                 )
               ]
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "text-center",
+              staticStyle: { "padding-bottom": "19px" }
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-sm btn-primary",
+                  attrs: { href: "#!" },
+                  on: {
+                    click: function($event) {
+                      _vm.getLatestHymns()
+                    }
+                  }
+                },
+                [
+                  _vm._v("More "),
+                  _vm.loading
+                    ? _c("i", { staticClass: "fas fa-spinner" })
+                    : _vm._e()
+                ]
+              )
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -3962,9 +4122,59 @@ var render = function() {
     _c("div", { staticClass: "row mt-5" }, [
       _c("div", { staticClass: "col-xl-8 mb-5 mb-xl-0" }, [
         _c("div", { staticClass: "card bg-secondary shadow" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header bg-white border-0" }, [
+            _c("div", { staticClass: "row align-items-center" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-4 text-right" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.newVerse()
+                      }
+                    }
+                  },
+                  [_vm._v("New Verse")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.addChorus()
+                      }
+                    }
+                  },
+                  [_vm._v("Add Chorus")]
+                )
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _vm.uploadProcessed
+              ? _c("div", { staticClass: "alert alert-success" }, [
+                  _vm._v("Success!\n            "),
+                  _c("span", [
+                    _vm._v("This hymn has been processed successfully.")
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.errors.length > 0
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _vm._v("Error!\n            "),
+                  _c("span", [_vm._v(_vm._s(_vm.errors.join(",")))])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
             _c(
               "form",
               [
@@ -4101,13 +4311,60 @@ var render = function() {
                 _vm._v(" "),
                 _c("hr", { staticClass: "my-4" }),
                 _vm._v(" "),
+                _vm.hymn.chorus != "" || _vm.isAddChorus
+                  ? _c("div", [
+                      _c(
+                        "h6",
+                        { staticClass: "heading-small text-muted mb-4" },
+                        [
+                          _vm._v("\n                Chorus\n                "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "small del",
+                              staticStyle: { float: "right" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteChorus()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-times" }),
+                              _vm._v(" Delete\n                ")
+                            ]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "pl-lg-4" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c("wysiwyg", {
+                              model: {
+                                value: _vm.hymn.chorus,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.hymn, "chorus", $$v)
+                                },
+                                expression: "hymn.chorus"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
                 _vm._l(_vm.hymn.verses, function(verse, index) {
                   return _c("div", [
                     _c("h6", { staticClass: "heading-small text-muted mb-4" }, [
                       _vm._v(
-                        "Verse " +
+                        "\n                Verse " +
                           _vm._s(index + 1) +
-                          "\n                                "
+                          "\n                "
                       ),
                       _c(
                         "a",
@@ -4122,7 +4379,7 @@ var render = function() {
                         },
                         [
                           _c("i", { staticClass: "fa fa-times" }),
-                          _vm._v(" Delete")
+                          _vm._v(" Delete\n                ")
                         ]
                       )
                     ]),
@@ -4148,7 +4405,53 @@ var render = function() {
                   ])
                 }),
                 _vm._v(" "),
-                _vm._m(1)
+                _c(
+                  "div",
+                  {
+                    staticClass: "row right--2",
+                    staticStyle: { float: "right" }
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "col-lg-12 right--1",
+                        attrs: { id: "button_submit" }
+                      },
+                      [
+                        _c("button", { staticClass: "btn btn-danger" }, [
+                          _vm._v("Disable")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-facebook",
+                            attrs: { href: "#button_submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.upload()
+                              }
+                            }
+                          },
+                          [
+                            _vm.uploadProcessing == 0
+                              ? _c("span", [_vm._v("Upload Hymn")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.uploadProcessing == 1
+                              ? _c("span", [_vm._v("Processing")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.uploadProcessing == 2
+                              ? _c("span", [_vm._v("Processed")])
+                              : _vm._e()
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
               ],
               2
             )
@@ -4156,7 +4459,164 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(2)
+      _c("div", { staticClass: "col-xl-4 order-xl-2 mb-5 mb-xl-0" }, [
+        _c("div", { staticClass: "card card-profile shadow" }, [
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-3 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.newVerse()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-left" })]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-3 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.addChorus()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-right" })]
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body pt-0 pt-md-4" }, [
+            _c(
+              "div",
+              { staticClass: "text-center" },
+              [
+                _c("h3", [
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(_vm.hymn.title) +
+                      "\n              "
+                  ),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "font-weight-light" }, [
+                    _vm._v("Hymn Number " + _vm._s(_vm.hymn.number))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "h5 mt-4" }, [
+                  _c("i", { staticClass: "ni business_briefcase-24 mr-2" }),
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(_vm.hymn.extra) +
+                      "\n            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("hr", { staticClass: "my-4" }),
+                _vm._v(" "),
+                _vm.hymn.chorus != "" || _vm.isAddChorus
+                  ? _c("code", { staticStyle: { display: "inline" } }, [
+                      _c("span", { staticStyle: { color: "#0a0c0d" } }, [
+                        _vm._v("Chorus")
+                      ]),
+                      _vm._v(" "),
+                      _c("p", {
+                        domProps: { innerHTML: _vm._s(_vm.hymn.chorus) }
+                      })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.hymn.verses, function(verse, index) {
+                  return _c("code", { staticStyle: { display: "inline" } }, [
+                    _c("span", { staticStyle: { color: "#0a0c0d" } }, [
+                      _vm._v("Verse " + _vm._s(index + 1))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      domProps: { innerHTML: _vm._s(_vm.hymn.verses[index]) }
+                    })
+                  ])
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-6 col-sm-6 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.newVerse()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-left" })]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-6 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.addChorus()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-right" })]
+                )
+              ]
+            )
+          ])
+        ])
+      ])
     ])
   ])
 }
@@ -4165,26 +4625,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header bg-white border-0" }, [
-      _c("div", { staticClass: "row align-items-center" }, [
-        _c("div", { staticClass: "col-8" }, [
-          _c("h3", { staticClass: "mb-0" }, [_vm._v("Hymn Record")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 text-right" }, [
-          _c(
-            "a",
-            { staticClass: "btn btn-sm btn-primary", attrs: { href: "#!" } },
-            [_vm._v("New Verse")]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            { staticClass: "btn btn-sm btn-success", attrs: { href: "#!" } },
-            [_vm._v("Add Chorus")]
-          )
-        ])
-      ])
+    return _c("div", { staticClass: "col-8" }, [
+      _c("h3", { staticClass: "mb-0" }, [_vm._v("Hymn Record")])
     ])
   },
   function() {
@@ -4193,69 +4635,18 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "row right--2", staticStyle: { float: "right" } },
+      { staticClass: "col-lg-3 col-sm-3 order-lg-2 text-center" },
       [
-        _c("div", { staticClass: "col-lg-12 right--1" }, [
-          _c("button", { staticClass: "btn btn-danger" }, [_vm._v("Cancel")]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn btn-facebook" }, [_vm._v("Submit")])
-        ])
+        _c(
+          "div",
+          {
+            staticClass: "card-profile-image",
+            staticStyle: { "padding-top": "23px" }
+          },
+          [_c("h2", [_vm._v("Hymn Info")])]
+        )
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-xl-4 order-xl-2 mb-5 mb-xl-0" }, [
-      _c("div", { staticClass: "card card-profile shadow" }, [
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-lg-6 order-lg-2 text-center" }, [
-            _c(
-              "div",
-              {
-                staticClass: "card-profile-image",
-                staticStyle: { "padding-top": "23px" }
-              },
-              [_c("h2", [_vm._v("Hymn Info")])]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", {
-          staticClass:
-            "card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body pt-0 pt-md-4" }, [
-          _c("div", { staticClass: "text-center" }, [
-            _c("h3", [
-              _vm._v("\n                            E korin iyifl si Olorun"),
-              _c("span", { staticClass: "font-weight-light" }, [
-                _vm._v(", Hymn Number 1")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "h5 mt-4" }, [
-              _c("i", { staticClass: "ni business_briefcase-24 mr-2" }),
-              _vm._v(
-                "Praise God fi’orn Whom All Blessings\n                            FlowG.H.34\n                        "
-              )
-            ]),
-            _vm._v(" "),
-            _c("hr", { staticClass: "my-4" }),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs\n                            and records all of his own music."
-              )
-            ]),
-            _vm._v(" "),
-            _c("a", { attrs: { href: "#" } }, [_vm._v("Show more")])
-          ])
-        ])
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -18148,6 +18539,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_events__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_events__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var vue_wysiwyg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-wysiwyg */ "./node_modules/vue-wysiwyg/dist/vueWysiwyg.js");
 /* harmony import */ var vue_wysiwyg__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_wysiwyg__WEBPACK_IMPORTED_MODULE_6__);
+var _data;
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**
@@ -18191,14 +18584,19 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
   el: '#app',
   router: router,
-  data: _defineProperty({
+  data: (_data = {
     message: 'Hi Bro',
     axios: null,
     data: "",
     errors: [],
     status: 0,
     response: null
-  }, "message", ""),
+  }, _defineProperty(_data, "message", ""), _defineProperty(_data, "stats", {
+    recordCount: 0,
+    hymnCount: 0,
+    versesCount: 0,
+    performance: 0
+  }), _data),
   mounted: function mounted() {
     this.axios = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
       headers: {

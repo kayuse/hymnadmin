@@ -54,6 +54,12 @@ const app = new Vue({
         status: 0,
         response: null,
         message: "",
+        stats : {
+            recordCount : 0,
+            hymnCount : 0,
+            versesCount : 0,
+            performance : 0,
+        },
     },
     mounted(){
         this.axios = axios.create({

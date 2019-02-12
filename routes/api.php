@@ -28,7 +28,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::post('/add-record', 'RecordController@add');
     Route::get('/fetch', 'RecordController@fetch');
     Route::get('/get/{id}', 'RecordController@get');
-    
+    Route::post('/create-hymn','HymnController@createHymn');
 });
 
 

@@ -1,169 +1,286 @@
 <template>
-    <div class="container-fluid mt--7">
-        <div class="row mt-5">
-            <div class="col-xl-8 mb-5 mb-xl-0">
-                <div class="card bg-secondary shadow">
-                    <div class="card-header bg-white border-0">
-                        <div class="row align-items-center">
-                            <div class="col-8">
-                                <h3 class="mb-0">Hymn Record</h3>
-                            </div>
-                            <div class="col-4 text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">New Verse</a>
-                                <a href="#!" class="btn btn-sm btn-success">Add Chorus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <h6 class="heading-small text-muted mb-4">Hymn information</h6>
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-username">Title</label>
-                                            <input type="text" id="input-username"
-                                                   v-model="hymn.title"
-                                                   class="form-control form-control-alternative" placeholder="Title">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-first-name">Extra</label>
-                                            <input type="text" id="input-first-name"
-                                                   v-model="hymn.extra"
-                                                   class="form-control form-control-alternative"
-                                                   placeholder="First name" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-last-name">Number</label>
-                                            <input type="text" id="input-last-name"
-                                                   v-model="hymn.number"
-                                                   class="form-control form-control-alternative" placeholder="Last name"
-                                                   value="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <span>Verses</span>
-                            <hr class="my-4"/>
-                            <!-- Description -->
-                            <div v-for="(verse,index) in hymn.verses">
-                                <h6 class="heading-small text-muted mb-4">Verse {{index + 1}}
-                                    <a v-on:click="deleteHymn(index)" class="small del" style="float: right;"><i class="fa fa-times"></i> Delete</a>
-                                </h6>
-                                <div class="pl-lg-4">
-                                    <div class="form-group">
-                                        <wysiwyg v-model="hymn.verses[index]" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row right--2" style="float: right;">
-                                <div class="col-lg-12 right--1">
-                                    <button class="btn btn-danger">Cancel</button>
-                                    <button class="btn btn-facebook">Submit</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+  <div class="container-fluid mt--7">
+    <div class="row mt-5">
+      <div class="col-xl-8 mb-5 mb-xl-0">
+        <div class="card bg-secondary shadow">
+          <div class="card-header bg-white border-0">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h3 class="mb-0">Hymn Record</h3>
+              </div>
+              <div class="col-4 text-right">
+                <a href="#!" class="btn btn-sm btn-primary" v-on:click="newVerse()">New Verse</a>
+                <a href="#!" class="btn btn-sm btn-success" v-on:click="addChorus()">Add Chorus</a>
+              </div>
             </div>
-            <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
-                <div class="card card-profile shadow">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-6 order-lg-2 text-center">
-                            <div class="card-profile-image" style="padding-top:23px;">
-                                <h2>Hymn Info</h2>
-                            </div>
-                        </div>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-success" v-if="uploadProcessed">Success!
+              <span>This hymn has been processed successfully.</span>
+            </div>
+            <div class="alert alert-danger" v-if="errors.length > 0">Error!
+              <span>{{errors.join(",")}}</span>
+            </div>
+            <form>
+              <h6 class="heading-small text-muted mb-4">Hymn information</h6>
+              <div class="pl-lg-4">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-username">Title</label>
+                      <input
+                        type="text"
+                        id="input-username"
+                        v-model="hymn.title"
+                        class="form-control form-control-alternative"
+                        placeholder="Title"
+                      >
                     </div>
-                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-first-name">Extra</label>
+                      <input
+                        type="text"
+                        id="input-first-name"
+                        v-model="hymn.extra"
+                        class="form-control form-control-alternative"
+                        placeholder="First name"
+                        value
+                      >
                     </div>
-                    <div class="card-body pt-0 pt-md-4">
-                        <div class="text-center">
-                            <h3>
-                                E korin iyifl si Olorun<span class="font-weight-light">, Hymn Number 1</span>
-                            </h3>
-                            <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i>Praise God fi’orn Whom All Blessings
-                                FlowG.H.34
-                            </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-last-name">Number</label>
+                      <input
+                        type="text"
+                        id="input-last-name"
+                        v-model="hymn.number"
+                        class="form-control form-control-alternative"
+                        placeholder="Last name"
+                        value
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span>Verses</span>
+              <hr class="my-4">
+              <!-- Description -->
+              <div v-if="hymn.chorus != '' || isAddChorus">
+                <h6 class="heading-small text-muted mb-4" v-if>
+                  Chorus
+                  <a v-on:click="deleteChorus()" class="small del" style="float: right;">
+                    <i class="fa fa-times"></i> Delete
+                  </a>
+                </h6>
 
-                            <hr class="my-4"/>
-                            <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs
-                                and records all of his own music.</p>
-                            <a href="#">Show more</a>
-                        </div>
-                    </div>
+                <div class="pl-lg-4" v-if>
+                  <div class="form-group">
+                    <wysiwyg v-model="hymn.chorus"/>
+                  </div>
                 </div>
-            </div>
+              </div>
+              <div v-for="(verse,index) in hymn.verses">
+                <h6 class="heading-small text-muted mb-4">
+                  Verse {{index + 1}}
+                  <a
+                    v-on:click="deleteHymn(index)"
+                    class="small del"
+                    style="float: right;"
+                  >
+                    <i class="fa fa-times"></i> Delete
+                  </a>
+                </h6>
+
+                <div class="pl-lg-4">
+                  <div class="form-group">
+                    <wysiwyg v-model="hymn.verses[index]"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row right--2" style="float: right;">
+                <div class="col-lg-12 right--1" id="button_submit">
+                  <button class="btn btn-danger">Disable</button>
+                  <a class="btn btn-facebook" href="#button_submit" v-on:click="upload()">
+                    <span v-if="uploadProcessing == 0">Upload Hymn</span>
+                    <span v-if="uploadProcessing == 1">Processing</span>
+                    <span v-if="uploadProcessing == 2">Processed</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
+      <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+        <div class="card card-profile shadow">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 col-sm-2 order-lg-2 text-center" style="padding:23px;">
+              <a href="#!" class="btn btn-sm btn-primary" v-on:click="newVerse()">
+                <i class="fa fa-angle-left"></i>
+              </a>
+            </div>
+            <div class="col-lg-3 col-sm-3 order-lg-2 text-center">
+              <div class="card-profile-image" style="padding-top:23px;">
+                <h2>Hymn Info</h2>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-2 order-lg-2 text-center" style="padding:23px;">
+              <a href="#!" class="btn btn-sm btn-success" v-on:click="addChorus()">
+                <i class="fa fa-angle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="card-body pt-0 pt-md-4">
+            <div class="text-center">
+              <h3>
+                {{hymn.title}}
+                <br>
+                <span class="font-weight-light">Hymn Number {{hymn.number}}</span>
+              </h3>
+              <div class="h5 mt-4">
+                <i class="ni business_briefcase-24 mr-2"></i>
+                {{hymn.extra}}
+              </div>
+
+              <hr class="my-4">
+              <code v-if="hymn.chorus != '' || isAddChorus" style="display: inline;">
+                <span style="color: #0a0c0d;">Chorus</span>
+                <p v-html="hymn.chorus"></p>
+              </code>
+              <code v-for="(verse,index) in hymn.verses" style="display: inline;">
+                <span style="color: #0a0c0d;">Verse {{index + 1}}</span>
+                <p v-html="hymn.verses[index]"></p>
+              </code>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-6 col-sm-6 order-lg-2 text-center" style="padding:23px;">
+              <a href="#!" class="btn btn-sm btn-primary" v-on:click="newVerse()">
+                <i class="fa fa-angle-left"></i>
+              </a>
+            </div>
+            <div class="col-lg-6 col-sm-2 order-lg-2 text-center" style="padding:23px;">
+              <a href="#!" class="btn btn-sm btn-success" v-on:click="addChorus()">
+                <i class="fa fa-angle-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <style lang = "scss">
-    @import "~vue-wysiwyg/dist/vueWysiwyg.css";
-    .del:hover{
-        cursor: pointer;
-    }
+@import "~vue-wysiwyg/dist/vueWysiwyg.css";
+.del:hover {
+  cursor: pointer;
+}
 </style>
 <script>
-    import axios from 'axios';
-    export default {
-        mounted() {
-            this.$events.listen('newRecord', eventData => console.log('hi'));
-            this.axios = axios.create({
-                headers: {'api_token': authToken}
-            });
-            this.getHymn();
-        }, data: function () {
-            return {
-                message: 'Hi Bro',
-                hymn: {
-                    title : "",
-                    number : "",
-                    extra : "",
-                    chorus : "",
-                    verses : []
-                },
-                axios: null,
-                errors: [],
-                status: 0,
-            }
-        }, methods: {
-            getHymn: function () {
-                let id = this.$route.params.id;
-                this.axios.get('/api/get/' + id).then((response) => {
-                    let data = response.data.data;
-                    this.hymn.title = data.title;
-                    this.hymn.extra = data.extra;
-                    this.hymn.number = data.number;
-                    this.processVerses(data.data);
-                    console.log(data);
-                }).catch((error) => {
-                    this.status = 2;
-                    this.errors.push("Error in processing records");
-                });
-            },
-            processVerses: function (data) {
-                let content = JSON.parse(data);
-                for (let key in content) {
-                    if (content.hasOwnProperty(key)) {
-                        if(key.toLowerCase() == "egbe"){
-                            this.hymn.chorus = content[key];
-                            continue;
-                        }
-                        this.hymn.verses.push(content[key]);
-                    }
-                }
-            },
-            deleteHymn : function (i) {
-                console.log(i);
-                this.hymn.verses.splice(i,1);
-            }
+import axios from "axios";
+export default {
+  mounted() {
+    this.$events.listen("newRecord", eventData => console.log("hi"));
+    this.axios = axios.create({
+      headers: { api_token: authToken }
+    });
+    this.getHymn();
+  },
+  data: function() {
+    return {
+      message: "Hi Bro",
+      hymn: {
+        title: "",
+        number: "",
+        extra: "",
+        chorus: "",
+        enabled: false,
+        verses: []
+      },
+      axios: null,
+      errors: [],
+      isAddChorus: false,
+      status: 0,
+      uploadProcessing: 0,
+      uploadProcessed: false,
+      id: 0
+    };
+  },
+  methods: {
+    getHymn: function() {
+      let id = this.$route.params.id;
+      this.id = id;
+      this.axios
+        .get("/api/get/" + id)
+        .then(response => {
+          let data = response.data.data;
+          this.hymn.title = data.title;
+          this.hymn.extra = data.extra;
+          this.hymn.number = data.number;
+          this.processVerses(data.data);
+        })
+        .catch(error => {
+          this.status = 2;
+          this.errors.push("Error in processing records");
+        });
+    },
+    processVerses: function(data) {
+      let content = JSON.parse(data);
+      for (let key in content) {
+        if (content.hasOwnProperty(key)) {
+          console.log(key);
+          if (key.toLowerCase() == "egbe") {
+            this.hymn.chorus = content[key];
+            continue;
+          }
+          this.hymn.verses.push(content[key]);
         }
+      }
+    },
+    deleteHymn: function(i) {
+      console.log(i);
+      this.hymn.verses.splice(i, 1);
+    },
+    newVerse: function() {
+      this.hymn.verses.push("");
+    },
+    addChorus: function() {
+      if (this.isAddChorus) {
+        return;
+      }
+      this.isAddChorus = true;
+    },
+    deleteChorus: function() {
+      this.hymn.chorus = "";
+      this.isAddChorus = false;
+    },
+    upload: function(e) {
+      if (this.uploadProcessed) {
+        return;
+      }
+
+      this.uploadProcessing = 1;
+      let data = { hymn: this.hymn, record_id: this.id };
+      this.axios
+        .post("/api/create-hymn", data)
+        .then(response => {
+          let responseData = response.data;
+          if (responseData.status == 0) {
+            this.errors.push(responseData.message);
+            this.uploadProcessing = 0;
+            return;
+          }
+          this.uploadProcessing = 2;
+          this.uploadProcessed = true;
+        })
+        .catch(error => console.log(error));
     }
+  }
+};
 </script>

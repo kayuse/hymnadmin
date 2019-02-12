@@ -44,6 +44,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="text-center" style="padding-bottom:19px;">
+                         <a href="#!" class="btn btn-sm btn-primary" v-on:click= "getLatestHymns()">More <i class="fas fa-spinner" v-if="loading"></i></a>
+                    </div>
                 </div>
             </div>
             <div class="col-xl-3">
@@ -191,16 +194,23 @@
             return {
                 message: 'Hi Bro',
                 hymns: [],
-                axios: null
+                axios: null,
+                page : 1,
+                loading:false,
             }
         }, methods: {
             updateRecords: function () {
                 this.getLatestHymns();
             },
             getLatestHymns: function () {
-                this.axios.get('/api/fetch').then(response => {
+                this.loading = true;
+                this.axios.get('/api/fetch?page='+this.page).then(response => {
                     let data = response.data.data.data;
-                    this.hymns = data;
+                    let concatData = this.hymns.concat(data);
+                    console.log(concatData);
+                    this.hymns = concatData;
+                    this.loading = false;
+                    this.page++;
                 })
             },
             getHymns: function () {
