@@ -17,6 +17,7 @@ class EditRecordsTable extends Migration
         Schema::table('records',function(Blueprint $table){
             $table->boolean('disabled')->default(false);
             $table->boolean('enabled')->default(false);
+            //default
         });
     }
 
