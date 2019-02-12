@@ -2352,6 +2352,8 @@ __webpack_require__.r(__webpack_exports__);
         _this2.uploadProcessing = 2;
         _this2.uploadProcessed = true;
         _this2.hymn.enabled = true;
+
+        _this2.$events.fire('reloadStats');
       }).catch(function (error) {
         return console.log(error);
       });
@@ -2371,6 +2373,8 @@ __webpack_require__.r(__webpack_exports__);
 
         if (data.status == 1) {
           _this3.hymn.disabled = true;
+
+          _this3.$events.fire('reloadStats');
         }
       });
     },
@@ -18679,19 +18683,25 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
     recordCount: "",
     hymnCount: "",
     verseCount: "",
+    disabledRecordCount: "",
     performance: ""
   }), _data),
   mounted: function mounted() {
+    var _this = this;
+
     this.axios = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
       headers: {
         'api_token': authToken
       }
     });
     this.getStats();
+    this.$events.listen('reloadStats', function (eventData) {
+      return _this.getStats();
+    });
   },
   methods: {
     addRecord: function addRecord() {
-      var _this = this;
+      var _this2 = this;
 
       this.errors = [];
       this.status = 0;
@@ -18707,33 +18717,34 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4___default.a({
       };
       this.axios.post('/api/add-record', data).then(function (response) {
         if (response.status == 200) {
-          _this.status = 2;
-          _this.message = "Record Successfully added";
+          _this2.status = 2;
+          _this2.message = "Record Successfully added";
           $('#myModal').modal('hide');
 
-          _this.$events.fire('newRecord');
+          _this2.$events.fire('newRecord');
         } else {
-          _this.status = 3;
+          _this2.status = 3;
 
-          _this.errors.push("Error in processing records");
+          _this2.errors.push("Error in processing records");
         }
       }).catch(function (error) {
-        _this.status = 3;
+        _this2.status = 3;
 
-        _this.errors.push("Error in processing records");
+        _this2.errors.push("Error in processing records");
       });
     },
     getStats: function getStats() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.axios.get('/api/dashboard/stats').then(function (response) {
         var data = response.data;
 
         if (data.status == 1) {
-          _this2.stats.recordCount = data.data.recordCount;
-          _this2.stats.hymnCount = data.data.hymnCount;
-          _this2.stats.verseCount = data.data.verseCount;
-          _this2.stats.performance = data.data.todayHymnCount;
+          _this3.stats.recordCount = data.data.recordCount;
+          _this3.stats.hymnCount = data.data.hymnCount;
+          _this3.stats.verseCount = data.data.verseCount;
+          _this3.stats.performance = data.data.todayHymnCount;
+          _this3.stats.disabledRecordCount = data.data.disabledRecordCount;
         }
       });
     }

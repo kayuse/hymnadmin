@@ -58,6 +58,7 @@ const app = new Vue({
             recordCount : "",
             hymnCount : "",
             verseCount : "",
+            disabledRecordCount : "",
             performance : "",
         },
     },
@@ -66,6 +67,7 @@ const app = new Vue({
             headers: {'api_token': authToken}
         })
         this.getStats();
+        this.$events.listen('reloadStats', eventData => this.getStats());
     },
     methods: {
         addRecord: function () {
@@ -100,6 +102,7 @@ const app = new Vue({
                    this.stats.hymnCount = data.data.hymnCount;
                    this.stats.verseCount = data.data.verseCount;
                    this.stats.performance = data.data.todayHymnCount;
+                   this.stats.disabledRecordCount = data.data.disabledRecordCount;
 
                }
             })

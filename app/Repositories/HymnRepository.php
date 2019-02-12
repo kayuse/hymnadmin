@@ -28,12 +28,13 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         $verseCount = Verse::count();
         $todayHymnCount = $this->model->whereDate('created_at', '=', date('Y-m-d'))
             ->where('user_id', Auth::user()->id)->count();
-
+        $disabledRecordCount = Record::where('disabled', true)->count();
         $response = [
             'hymnCount' => $hymnCount,
             'recordCount' => $recordCount,
             'verseCount' => $verseCount,
-            'todayHymnCount' => $todayHymnCount
+            'todayHymnCount' => $todayHymnCount,
+            'disabledRecordCount' => $disabledRecordCount
         ];
 
         return $response;

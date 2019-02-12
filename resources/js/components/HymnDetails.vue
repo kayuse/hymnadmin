@@ -293,6 +293,7 @@ export default {
           this.uploadProcessing = 2;
           this.uploadProcessed = true;
           this.hymn.enabled = true;
+            this.$events.fire('reloadStats');
         })
         .catch(error => console.log(error));
     },
@@ -305,6 +306,7 @@ export default {
            let data = response.data;
            if(data.status == 1 ){
                this.hymn.disabled = true;
+                   this.$events.fire('reloadStats');
            }
         })
     },

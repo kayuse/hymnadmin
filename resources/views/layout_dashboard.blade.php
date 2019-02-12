@@ -78,7 +78,7 @@
                                             <span class="h2 font-weight-bold mb-0" v-html="stats.recordCount"></span>
                                         </div>
                                         <div class="col-auto">
-                                            <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                            <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
                                                 <i class="fas fa-chart-bar"></i>
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@
                                             <span class="h2 font-weight-bold mb-0" v-html="stats.hymnCount"></span>
                                         </div>
                                         <div class="col-auto">
-                                            <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                            <div class="icon icon-shape bg-success text-white rounded-circle shadow">
                                                 <i class="fas fa-chart-pie"></i>
                                             </div>
                                         </div>
@@ -108,11 +108,11 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">Verses</h5>
-                                            <span class="h2 font-weight-bold mb-0" v-html="stats.verseCount">924</span>
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Invalid Records</h5>
+                                            <span class="h2 font-weight-bold mb-0" v-html="stats.disabledRecordCount">924</span>
                                         </div>
                                         <div class="col-auto">
-                                            <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                            <div class="icon icon-shape  bg-danger text-white rounded-circle shadow">
                                                 <i class="fas fa-users"></i>
                                             </div>
                                         </div>
