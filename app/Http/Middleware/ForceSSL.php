@@ -7,7 +7,7 @@
  */
 
 namespace App\Http\Middleware;
-
+Use Closure;
 
 class ForceSSL
 {
