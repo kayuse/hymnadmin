@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ab19769-0667-479e-a952-e4d94cb8e784" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Middleware/ForceSSL.php" afterPath="$PROJECT_DIR$/app/Http/Middleware/ForceSSL.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Kernel.php" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" />
     </list>
     <ignored path="hymn-admin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,7 +77,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ForceSSL.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ForceSSL.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Middleware/ForceSSL.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="96">
@@ -87,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Kernel.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Kernel.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="336">
-              <caret line="19" column="45" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
+              <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -202,8 +202,8 @@
         <option value="$PROJECT_DIR$/storage/logs/laravel-2019-02-12.log" />
         <option value="$PROJECT_DIR$/database/migrations/2019_02_12_165601_edit_records_table.php" />
         <option value="$PROJECT_DIR$/database/migrations/2019_02_12_095523_edit_records_table.php" />
-        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/ForceSSL.php" />
+        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
       </list>
     </option>
   </component>
@@ -802,12 +802,12 @@
       <workItem from="1549031131070" duration="1409000" />
       <workItem from="1549041275777" duration="23566000" />
       <workItem from="1549248729963" duration="8300000" />
-      <workItem from="1549895064593" duration="18813000" />
+      <workItem from="1549895064593" duration="18895000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62170000" />
+    <option name="totallyTimeSpent" value="62252000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1255,18 +1255,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="19" column="45" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Middleware/ForceSSL.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="96">
           <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
           <folding />
         </state>
       </provider>
