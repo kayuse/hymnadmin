@@ -2317,7 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.errors = [];
       this.axios.get('/api/hymn/' + this.hymn.number).then(function (res) {
-        if (res.data.success == 1) {
+        if (res.data.data != null) {
           _this2.errors.push("This hymn has been processed previously");
         }
       }).catch(function (error) {

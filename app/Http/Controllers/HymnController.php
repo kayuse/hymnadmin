@@ -32,7 +32,7 @@ class HymnController extends Controller
     {
         try {
 
-            $hymn = $this->respository->show($id);
+            $hymn = $this->respository->getHymn($id);
             return response()->json(['success' => 1, 'data' => $hymn]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);

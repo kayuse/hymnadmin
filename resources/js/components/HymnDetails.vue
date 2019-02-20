@@ -263,8 +263,7 @@
             checkHymnNumber: function () {
                 this.errors = [];
                     this.axios.get('/api/hymn/'+this.hymn.number).then(res => {
-                       
-                        if(res.data.success == 1){
+                        if(res.data.data != null ){
                             this.errors.push("This hymn has been processed previously")
                         }
                     }).catch(error => {

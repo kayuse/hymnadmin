@@ -86,6 +86,11 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         };
     }
 
+    public function getHymn($number)
+    {
+        return $this->model->where('number', $number)->first();
+    }
+
     protected function updateRecord($id)
     {
         $record = Record::findOrFail($id);
