@@ -83,6 +83,7 @@ const app = new Vue({
                 if (response.status == 200) {
                     this.status = 2;
                     this.message = "Record Successfully added";
+                    console.log(response);
                     $('#myModal').modal('hide');
                     this.$events.fire('newRecord');
                 }else{
@@ -91,6 +92,7 @@ const app = new Vue({
                 }
             }).catch((error) => {
                 this.status = 3;
+                console.log(error);
                this.errors.push("Error in processing records");
             });
         },
