@@ -30,6 +30,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/get/{id}', 'RecordController@get');
     Route::post('/disable', 'RecordController@disable');
     Route::post('/hymn/create-hymn', 'HymnController@createHymn');
+    Route::get('/hymn/{id}','HymnController@get');
     Route::get('/dashboard/stats', 'DashboardController@getStats');
 });
 

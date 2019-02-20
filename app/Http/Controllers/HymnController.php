@@ -21,10 +21,21 @@ class HymnController extends Controller
             $hymn = $request->hymn;
             $recordId = $request->record_id;
             $data = $hymn;
-            $response = $this->respository->saveHymn($data,$recordId);
+            $response = $this->respository->saveHymn($data, $recordId);
             return response()->json($response);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage() . $e->getTrace(), 'status' => -1], 500);
+            return response()->json(['message' => $e->getMessage() , 'status' => -1], 500);
+        }
+    }
+
+    public function get($id)
+    {
+        try {
+
+            $hymn = $this->respository->show($id);
+            return response()->json(['success' => 1, 'data' => $hymn]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
         }
     }
 }
