@@ -1,8 +1,10 @@
 <?php
 namespace App\Repositories;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+
 /**
  * Created by IntelliJ IDEA.
  * User: user
@@ -25,7 +27,10 @@ abstract class BaseRepository implements IBaseRepository
     {
         return $this->model->all();
     }
-
+    /**
+     * @param array $data
+     * @return mixed
+     */
     // create a new record in the database
     public function create(array $data)
     {

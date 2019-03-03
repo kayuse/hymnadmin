@@ -91,6 +91,21 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         return $this->model->where('number', $number)->first();
     }
 
+    public function new($data){
+        $data["user_id"] = Auth::user()->id;
+        $hymn = $this->create($data);
+        $verses = [];
+        foreach ($data['verses'] as $verse) {
+            $newVerse = new Verse([
+                'number' => $verse["number"],
+                'content' => $verse["content"]
+            ]);
+            array_push($verses, $newVerse);
+        }
+        $hymn->verses()->saveMany($verses);
+
+        return $hymn;
+    }
     protected function updateRecord($id)
     {
         $record = Record::findOrFail($id);

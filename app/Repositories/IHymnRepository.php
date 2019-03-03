@@ -14,4 +14,5 @@ interface IHymnRepository extends IBaseRepository
     public function getStats();
     public function saveHymn($data,$recordId = null);
     public function getHymn($number);
+    public function new($data);
 }
