@@ -94,7 +94,19 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         return $hymn;
     }
 
-    public function new($data){
+    public function all()
+    {
+        $hymns = $this->model->all();
+        $count = 0;
+        foreach ($hymns as $hymn) {
+            $hymns[$count]["verses"] = $hymn->verses()->get();
+            $count++;
+        }
+        return $hymns;
+    }
+
+    public function new($data)
+    {
         $data["user_id"] = Auth::user()->id;
         $hymn = $this->create($data);
         $verses = [];
@@ -108,6 +120,7 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         $hymn->verses()->saveMany($verses);
         return $hymn;
     }
+
     protected function updateRecord($id)
     {
         $record = Record::findOrFail($id);

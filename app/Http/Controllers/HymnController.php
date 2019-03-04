@@ -39,7 +39,14 @@ class HymnController extends Controller
             return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
         }
     }
-
+    public function download(){
+        try {
+            $hymns = $this->respository->all();
+            return response()->json(['data' => $hymns]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+        }
+    }
     public function get($id )
     {
         try {

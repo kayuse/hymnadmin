@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::get('/login','Auth\LoginController@view')->name('login');
 Route::post('/login','Auth\LoginController@login')->name('login.post');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
+Route::get('/download-hymns','HymnController@download')->name('download');
 //Route::get('/home','DashboardController@index')->middleware('auth');
 
 Route::get('/home/{vue_capture?}', "DashboardController@index")->middleware('auth')->where('vue_capture', '[\/\w\.-]*')->name('home');
