@@ -31,6 +31,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::post('/disable', 'RecordController@disable');
     Route::post('/hymn/create-hymn', 'HymnController@createHymn');
     Route::get('/hymn/{id}','HymnController@get');
+    Route::get('/hymn/get/{number}','HymnController@getHymn');
     Route::post('/hymn/new','HymnController@new');
     Route::get('/dashboard/stats', 'DashboardController@getStats');
 });

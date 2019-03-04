@@ -21,6 +21,9 @@
             </form>
 
             <a class="btn" style="color: #f8fafc;" data-toggle="modal" data-target="#myModal">New Record</a>
+            <router-link :to="{ name: 'NewHymn'}">
+                <a class="btn btn-primary" style="color: #f8fafc;" >New Hymn</a>
+                </router-link>
             <!-- User -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">

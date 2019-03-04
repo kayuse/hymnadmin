@@ -88,7 +88,10 @@ class HymnRepository extends BaseRepository implements IHymnRepository
 
     public function getHymn($number)
     {
-        return $this->model->where('number', $number)->first();
+        $hymn = $this->model->where('number', $number)->first();
+        $verses = $hymn->verses()->get();
+        $hymn["verses"] = $verses;
+        return $hymn;
     }
 
     public function new($data){
@@ -103,7 +106,6 @@ class HymnRepository extends BaseRepository implements IHymnRepository
             array_push($verses, $newVerse);
         }
         $hymn->verses()->saveMany($verses);
-
         return $hymn;
     }
     protected function updateRecord($id)

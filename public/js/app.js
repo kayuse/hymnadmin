@@ -2418,10 +2418,413 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHymn.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    this.$events.listen("newRecord", function (eventData) {
+      return console.log("hi");
+    });
+    this.axios = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+      headers: {
+        'apiToken': authToken
+      }
+    });
+  },
+  data: function data() {
+    return {
+      message: "Hi Bro",
+      hymn: {
+        title: "",
+        number: "",
+        extra: "",
+        chorus: "",
+        enabled: false,
+        disabled: false,
+        verses: []
+      },
+      axios: null,
+      errors: [],
+      isAddChorus: false,
+      status: 0,
+      uploadProcessing: 0,
+      uploadProcessed: false,
+      disableProcessing: false,
+      isValidHymn: 0,
+      id: 0
+    };
+  },
+  methods: {
+    getHymn: function getHymn() {
+      var _this = this;
+
+      var id = this.$route.params.id;
+      this.id = id;
+      this.axios.get("/api/get/" + id).then(function (response) {
+        var data = response.data.data;
+        _this.hymn.title = data.title;
+        _this.hymn.extra = data.extra;
+        _this.hymn.enabled = data.enabled;
+        _this.hymn.disabled = data.disabled;
+        _this.hymn.number = data.number;
+
+        _this.processVerses(data.data);
+      }).catch(function (error) {
+        _this.status = 2;
+
+        _this.errors.push("Error in processing records");
+      });
+    },
+    processVerses: function processVerses(data) {
+      var content = JSON.parse(data);
+
+      for (var key in content) {
+        if (content.hasOwnProperty(key)) {
+          //console.log(key);
+          if (key.toLowerCase() == "egbe") {
+            this.hymn.chorus = content[key];
+            continue;
+          }
+
+          this.hymn.verses.push(content[key]);
+        }
+      }
+    },
+    checkHymnNumber: function checkHymnNumber() {
+      var _this2 = this;
+
+      if (this.hymn.number == "") {
+        return;
+      }
+
+      this.errors = [];
+      this.axios.get('/api/hymn/get/' + this.hymn.number).then(function (res) {
+        if (res.data.data != null) {
+          _this2.errors.push("This hymn has been processed previously");
+        }
+      }).catch(function (error) {
+        _this2.isValidHymn = -1;
+      });
+    },
+    deleteHymn: function deleteHymn(i) {
+      console.log(i);
+      this.hymn.verses.splice(i, 1);
+    },
+    newVerse: function newVerse() {
+      this.hymn.verses.push("");
+    },
+    addChorus: function addChorus() {
+      if (this.isAddChorus) {
+        return;
+      }
+
+      this.isAddChorus = true;
+    },
+    deleteChorus: function deleteChorus() {
+      this.hymn.chorus = "";
+      this.isAddChorus = false;
+    },
+    upload: function upload(e) {
+      var _this3 = this;
+
+      if (this.uploadProcessed || this.hymn.enabled || this.hymn.disabled) {
+        return;
+      }
+
+      this.uploadProcessing = 1;
+      var data = {
+        hymn: this.hymn,
+        record_id: this.id
+      };
+      this.axios.post("/api/hymn/create-hymn", data).then(function (response) {
+        var responseData = response.data;
+
+        if (responseData.status == 0) {
+          _this3.errors.push(responseData.message);
+
+          _this3.uploadProcessing = 0;
+          return;
+        }
+
+        _this3.uploadProcessing = 2;
+        _this3.uploadProcessed = true;
+        _this3.hymn.enabled = true;
+
+        _this3.$events.fire('reloadStats');
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    disable: function disable() {
+      var _this4 = this;
+
+      if (this.hymn.disabled == true || this.hymn.enabled) {
+        return;
+      }
+
+      var data = {
+        'id': this.id
+      };
+      this.axios.post('/api/disable', data).then(function (response) {
+        var data = response.data;
+
+        if (data.status == 1) {
+          _this4.hymn.disabled = true;
+
+          _this4.$events.fire('reloadStats');
+        }
+      });
+    },
+    next: function next() {
+      var id = parseInt(this.id) + 1;
+      this.$router.push({
+        name: "HymnDetails",
+        params: {
+          id: id
+        }
+      });
+    },
+    prev: function prev() {
+      if (this.id > 1) {
+        var id = parseInt(this.id) - 1;
+        this.$router.push({
+          name: "HymnDetails",
+          params: {
+            id: id
+          }
+        });
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HymnDetails.vue?vue&type=style&index=0&lang=scss&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/HymnDetails.vue?vue&type=style&index=0&lang=scss& ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!vue-wysiwyg/dist/vueWysiwyg.css */ "./node_modules/css-loader/index.js!./node_modules/vue-wysiwyg/dist/vueWysiwyg.css"), "");
+
+// module
+exports.push([module.i, ".del:hover {\n  cursor: pointer;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2977,6 +3380,36 @@ process.umask = function() { return 0; };
 
 
 var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./HymnDetails.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/HymnDetails.vue?vue&type=style&index=0&lang=scss&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHymn.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -4559,6 +4992,580 @@ var render = function() {
                           [
                             _vm.uploadProcessing == 0 && !_vm.hymn.enabled
                               ? _c("span", [_vm._v("Upload Hymn")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.uploadProcessing == 1
+                              ? _c("span", [_vm._v("Processing")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.uploadProcessing == 2 || _vm.hymn.enabled
+                              ? _c("span", [_vm._v("Processed")])
+                              : _vm._e()
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ],
+              2
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xl-4 order-xl-2 mb-5 mb-xl-0" }, [
+        _c("div", { staticClass: "card card-profile shadow" }, [
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-3 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        _vm.prev()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-left" })]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-3 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        _vm.next()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-right" })]
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body pt-0 pt-md-4" }, [
+            _c(
+              "div",
+              { staticClass: "text-center" },
+              [
+                _c("h3", [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(_vm.hymn.title) +
+                      "\n                            "
+                  ),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "font-weight-light" }, [
+                    _vm._v("Hymn Number " + _vm._s(_vm.hymn.number))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "h5 mt-4" }, [
+                  _c("i", { staticClass: "ni business_briefcase-24 mr-2" }),
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(_vm.hymn.extra) +
+                      "\n                        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("hr", { staticClass: "my-4" }),
+                _vm._v(" "),
+                _vm.hymn.chorus != "" || _vm.isAddChorus
+                  ? _c("code", { staticStyle: { display: "inline" } }, [
+                      _c("span", { staticStyle: { color: "#0a0c0d" } }, [
+                        _vm._v("Chorus")
+                      ]),
+                      _vm._v(" "),
+                      _c("p", {
+                        domProps: { innerHTML: _vm._s(_vm.hymn.chorus) }
+                      })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.hymn.verses, function(verse, index) {
+                  return _c("code", { staticStyle: { display: "inline" } }, [
+                    _c("span", { staticStyle: { color: "#0a0c0d" } }, [
+                      _vm._v("Verse " + _vm._s(index + 1))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      domProps: { innerHTML: _vm._s(_vm.hymn.verses[index]) }
+                    })
+                  ])
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-6 col-sm-6 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        _vm.prev()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-left" })]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col-lg-6 col-sm-2 order-lg-2 text-center",
+                staticStyle: { padding: "23px" }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        _vm.next()
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-angle-right" })]
+                )
+              ]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-8" }, [
+      _c("h3", { staticClass: "mb-0" }, [_vm._v("Hymn Record")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "col-lg-3 col-sm-3 order-lg-2 text-center" },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "card-profile-image",
+            staticStyle: { "padding-top": "23px" }
+          },
+          [_c("h2", [_vm._v("Hymn Info")])]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897&":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897& ***!
+  \**********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid mt--7" }, [
+    _c("div", { staticClass: "row mt-5" }, [
+      _c("div", { staticClass: "col-xl-8 mb-5 mb-xl-0" }, [
+        _c("div", { staticClass: "card bg-secondary shadow" }, [
+          _c("div", { staticClass: "card-header bg-white border-0" }, [
+            _c("div", { staticClass: "row align-items-center" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-4 text-right" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.newVerse()
+                      }
+                    }
+                  },
+                  [_vm._v("New Verse")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { href: "#!" },
+                    on: {
+                      click: function($event) {
+                        _vm.addChorus()
+                      }
+                    }
+                  },
+                  [_vm._v("Add Chorus")]
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _vm.uploadProcessed || _vm.hymn.enabled
+              ? _c("div", { staticClass: "alert alert-success" }, [
+                  _vm._v(
+                    "\n                        Success!\n                        "
+                  ),
+                  _c("span", [
+                    _vm._v("This hymn has been processed successfully.")
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.errors.length > 0
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _vm._v(
+                    "\n                        Error!\n                        "
+                  ),
+                  _c("span", [_vm._v(_vm._s(_vm.errors.join(",")))])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.hymn.disabled
+              ? _c("div", { staticClass: "alert alert-warning" }, [
+                  _vm._v(
+                    "\n                        Alert!\n                        "
+                  ),
+                  _c("span", [_vm._v("This Record has been disabled")])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "form",
+              [
+                _c("h6", { staticClass: "heading-small text-muted mb-4" }, [
+                  _vm._v("Hymn information")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "pl-lg-4" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-lg-12" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-control-label",
+                            attrs: { for: "input-username" }
+                          },
+                          [_vm._v("Title")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.hymn.title,
+                              expression: "hymn.title"
+                            }
+                          ],
+                          staticClass: "form-control form-control-alternative",
+                          attrs: {
+                            type: "text",
+                            id: "input-username",
+                            placeholder: "Title"
+                          },
+                          domProps: { value: _vm.hymn.title },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.hymn, "title", $event.target.value)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-lg-6" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-control-label",
+                            attrs: { for: "input-first-name" }
+                          },
+                          [_vm._v("Extra")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.hymn.extra,
+                              expression: "hymn.extra"
+                            }
+                          ],
+                          staticClass: "form-control form-control-alternative",
+                          attrs: {
+                            type: "text",
+                            id: "input-first-name",
+                            placeholder: "First name",
+                            value: ""
+                          },
+                          domProps: { value: _vm.hymn.extra },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.hymn, "extra", $event.target.value)
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-lg-6" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-control-label",
+                            attrs: { for: "input-last-name" }
+                          },
+                          [_vm._v("Number")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.hymn.number,
+                              expression: "hymn.number"
+                            }
+                          ],
+                          staticClass: "form-control form-control-alternative",
+                          attrs: {
+                            type: "text",
+                            id: "input-last-name",
+                            placeholder: "Hymn Number",
+                            value: ""
+                          },
+                          domProps: { value: _vm.hymn.number },
+                          on: {
+                            input: [
+                              function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.hymn,
+                                  "number",
+                                  $event.target.value
+                                )
+                              },
+                              function($event) {
+                                _vm.checkHymnNumber()
+                              }
+                            ]
+                          }
+                        })
+                      ])
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("span", [_vm._v("Verses")]),
+                _vm._v(" "),
+                _c("hr", { staticClass: "my-4" }),
+                _vm._v(" "),
+                _vm.hymn.chorus != "" || _vm.isAddChorus
+                  ? _c("div", [
+                      _c(
+                        "h6",
+                        { staticClass: "heading-small text-muted mb-4" },
+                        [
+                          _vm._v(
+                            "\n                                Chorus\n                                "
+                          ),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "small del",
+                              staticStyle: { float: "right" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteChorus()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-times" }),
+                              _vm._v(
+                                " Delete\n                                "
+                              )
+                            ]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "pl-lg-4" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c("wysiwyg", {
+                              model: {
+                                value: _vm.hymn.chorus,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.hymn, "chorus", $$v)
+                                },
+                                expression: "hymn.chorus"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.hymn.verses, function(verse, index) {
+                  return _c("div", [
+                    _c("h6", { staticClass: "heading-small text-muted mb-4" }, [
+                      _vm._v(
+                        "\n                                Verse " +
+                          _vm._s(index + 1) +
+                          "\n                                "
+                      ),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "small del",
+                          staticStyle: { float: "right" },
+                          on: {
+                            click: function($event) {
+                              _vm.deleteHymn(index)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-times" }),
+                          _vm._v(" Delete\n                                ")
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "pl-lg-4" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("wysiwyg", {
+                            model: {
+                              value: _vm.hymn.verses[index],
+                              callback: function($$v) {
+                                _vm.$set(_vm.hymn.verses, index, $$v)
+                              },
+                              expression: "hymn.verses[index]"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "row right--2",
+                    staticStyle: { float: "right" }
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "col-lg-12 right--1",
+                        attrs: { id: "button_submit" }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-facebook",
+                            attrs: { href: "#button_submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.upload()
+                              }
+                            }
+                          },
+                          [
+                            _vm.uploadProcessing == 0 && !_vm.hymn.enabled
+                              ? _c("span", [_vm._v("New Hymn")])
                               : _vm._e(),
                             _vm._v(" "),
                             _vm.uploadProcessing == 1
@@ -19014,6 +20021,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/NewHymn.vue":
+/*!*********************************************!*\
+  !*** ./resources/js/components/NewHymn.vue ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NewHymn.vue?vue&type=template&id=16e82897& */ "./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897&");
+/* harmony import */ var _NewHymn_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NewHymn.vue?vue&type=script&lang=js& */ "./resources/js/components/NewHymn.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NewHymn.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _NewHymn_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/NewHymn.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/NewHymn.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/NewHymn.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHymn.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss& ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHymn.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897& ***!
+  \****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHymn.vue?vue&type=template&id=16e82897& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHymn.vue?vue&type=template&id=16e82897&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHymn_vue_vue_type_template_id_16e82897___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/routes.js":
 /*!********************************!*\
   !*** ./resources/js/routes.js ***!
@@ -19027,9 +20121,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Home.vue */ "./resources/js/components/Home.vue");
 /* harmony import */ var _components_Example_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Example.vue */ "./resources/js/components/Example.vue");
 /* harmony import */ var _components_HymnDetails_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/HymnDetails.vue */ "./resources/js/components/HymnDetails.vue");
+/* harmony import */ var _components_NewHymn_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/NewHymn.vue */ "./resources/js/components/NewHymn.vue");
 /**
  * Created by user on 2/1/19.
  */
+
 
 
 
@@ -19041,6 +20137,10 @@ var routes = [{
   path: '/home/hymn/:id',
   component: _components_HymnDetails_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
   name: 'HymnDetails'
+}, {
+  path: '/home/new',
+  component: _components_NewHymn_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+  name: 'NewHymn'
 }, {
   path: '/vue/example',
   component: _components_Example_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
