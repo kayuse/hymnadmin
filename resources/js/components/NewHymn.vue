@@ -1,7 +1,7 @@
 <template>
 
     <div class="container-fluid mt--7">
-        <div>
+        <div style="padding:9px">
         <button type="button" class="btn btn-default btn-sm unfilled-hymns" v-for="unprocessedHymnNumber in this.unproccessedHymns">
             {{unprocessedHymnNumber}}
             <span class="sr-only">unread messages</span>
