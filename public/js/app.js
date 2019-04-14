@@ -2621,6 +2621,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -2632,6 +2640,7 @@ __webpack_require__.r(__webpack_exports__);
         'apiToken': authToken
       }
     });
+    this.getUnfilledHymns();
   },
   data: function data() {
     return {
@@ -2650,6 +2659,7 @@ __webpack_require__.r(__webpack_exports__);
       isAddChorus: false,
       status: 0,
       uploadProcessing: 0,
+      unproccessedHymns: [],
       uploadProcessed: false,
       disableProcessing: false,
       isValidHymn: 0,
@@ -2677,6 +2687,15 @@ __webpack_require__.r(__webpack_exports__);
         _this.errors.push("Error in processing records");
       });
     },
+    getUnfilledHymns: function getUnfilledHymns() {
+      var _this2 = this;
+
+      this.axios.get('/api/hymn/get-unfilled-hymns/').then(function (response) {
+        console.log(response.data);
+        _this2.unproccessedHymns = response.data.data;
+        console.log(_this2.unprocessedHymns);
+      });
+    },
     processVerses: function processVerses(data) {
       var content = JSON.parse(data);
 
@@ -2693,7 +2712,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     checkHymnNumber: function checkHymnNumber() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.hymn.number == "") {
         return;
@@ -2702,10 +2721,10 @@ __webpack_require__.r(__webpack_exports__);
       this.errors = [];
       this.axios.get('/api/hymn/get/' + this.hymn.number).then(function (res) {
         if (res.data.data != null) {
-          _this2.errors.push("This hymn has been processed previously");
+          _this3.errors.push("This hymn has been processed previously");
         }
       }).catch(function (error) {
-        _this2.isValidHymn = -1;
+        _this3.isValidHymn = -1;
       });
     },
     deleteHymn: function deleteHymn(i) {
@@ -2727,7 +2746,7 @@ __webpack_require__.r(__webpack_exports__);
       this.isAddChorus = false;
     },
     upload: function upload(e) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.uploadProcessed || this.hymn.enabled || this.hymn.disabled) {
         return;
@@ -2742,23 +2761,23 @@ __webpack_require__.r(__webpack_exports__);
         var responseData = response.data;
 
         if (responseData.status == 0) {
-          _this3.errors.push(responseData.message);
+          _this4.errors.push(responseData.message);
 
-          _this3.uploadProcessing = 0;
+          _this4.uploadProcessing = 0;
           return;
         }
 
-        _this3.uploadProcessing = 2;
-        _this3.uploadProcessed = true;
-        _this3.hymn.enabled = true;
+        _this4.uploadProcessing = 2;
+        _this4.uploadProcessed = true;
+        _this4.hymn.enabled = true;
 
-        _this3.$events.fire('reloadStats');
+        _this4.$events.fire('reloadStats');
       }).catch(function (error) {
         return console.log(error);
       });
     },
     disable: function disable() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.hymn.disabled == true || this.hymn.enabled) {
         return;
@@ -2771,9 +2790,9 @@ __webpack_require__.r(__webpack_exports__);
         var data = response.data;
 
         if (data.status == 1) {
-          _this4.hymn.disabled = true;
+          _this5.hymn.disabled = true;
 
-          _this4.$events.fire('reloadStats');
+          _this5.$events.fire('reloadStats');
         }
       });
     },
@@ -5226,6 +5245,24 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container-fluid mt--7" }, [
+    _c(
+      "div",
+      _vm._l(this.unproccessedHymns, function(unprocessedHymnNumber) {
+        return _c(
+          "button",
+          {
+            staticClass: "btn btn-default btn-sm unfilled-hymns",
+            attrs: { type: "button" }
+          },
+          [
+            _vm._v("\n        " + _vm._s(unprocessedHymnNumber) + "\n        "),
+            _c("span", { staticClass: "sr-only" }, [_vm._v("unread messages")])
+          ]
+        )
+      }),
+      0
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "row mt-5" }, [
       _c("div", { staticClass: "col-xl-8 mb-5 mb-xl-0" }, [
         _c("div", { staticClass: "card bg-secondary shadow" }, [

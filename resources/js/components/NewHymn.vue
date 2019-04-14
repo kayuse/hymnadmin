@@ -1,5 +1,12 @@
 <template>
+
     <div class="container-fluid mt--7">
+        <div>
+        <button type="button" class="btn btn-default btn-sm unfilled-hymns" v-for="unprocessedHymnNumber in this.unproccessedHymns">
+            {{unprocessedHymnNumber}}
+            <span class="sr-only">unread messages</span>
+        </button>
+        </div>
         <div class="row mt-5">
             <div class="col-xl-8 mb-5 mb-xl-0">
                 <div class="card bg-secondary shadow">
@@ -14,6 +21,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="card-body">
                         <div class="alert alert-success" v-if="uploadProcessed || hymn.enabled">
                             Success!
@@ -111,7 +119,7 @@
                             </div>
                             <div class="row right--2" style="float: right;">
                                 <div class="col-lg-12 right--1" id="button_submit">
-                                
+
                                     <a class="btn btn-facebook" href="#button_submit" v-on:click="upload()">
                                         <span v-if="uploadProcessing == 0 && !hymn.enabled">New Hymn</span>
                                         <span v-if="uploadProcessing == 1">Processing</span>
@@ -198,6 +206,7 @@
             this.axios = axios.create({
                 headers: {'apiToken': authToken}
             });
+            this.getUnfilledHymns();
         },
         data: function () {
             return {
@@ -216,6 +225,7 @@
                 isAddChorus: false,
                 status: 0,
                 uploadProcessing: 0,
+                unproccessedHymns : [],
                 uploadProcessed: false,
                 disableProcessing: false,
                 isValidHymn : 0,
@@ -241,6 +251,13 @@
                         this.status = 2;
                        this.errors.push("Error in processing records");
                     });
+            },
+            getUnfilledHymns : function(){
+                this.axios.get('/api/hymn/get-unfilled-hymns/').then(response =>{
+                    console.log(response.data);
+                    this.unproccessedHymns = response.data.data;
+                    console.log(this.unprocessedHymns);
+                })
             },
             processVerses: function (data) {
                 let content = JSON.parse(data);

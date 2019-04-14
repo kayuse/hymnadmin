@@ -105,6 +105,14 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         return $hymns;
     }
 
+    public function getUnfilledHymnNumbers(){
+        $list = range(1,601);
+        $hymnNumbers = $this->model->pluck('number')->toArray();
+        $unfilledHymnNumbers =  array_diff($list,$hymnNumbers);
+
+        return array_values($unfilledHymnNumbers);
+    }
+
     public function new($data)
     {
         $data["user_id"] = Auth::user()->id;

@@ -29,6 +29,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/fetch', 'RecordController@fetch');
     Route::get('/get/{id}', 'RecordController@get');
     Route::post('/disable', 'RecordController@disable');
+    Route::get('/hymn/get-unfilled-hymns','HymnController@getUnfilledHymns');
     Route::post('/hymn/create-hymn', 'HymnController@createHymn');
     Route::get('/hymn/{id}','HymnController@get');
     Route::get('/hymn/get/{number}','HymnController@getHymn');

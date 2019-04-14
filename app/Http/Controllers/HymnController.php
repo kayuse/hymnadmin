@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\IHymnRepository;
 use Illuminate\Http\Request;
-use Validator;
+use Mockery\CountValidator\Exception;use Validator;
 
 
 class HymnController extends Controller
@@ -47,6 +47,16 @@ class HymnController extends Controller
             return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
         }
     }
+
+    public function getUnfilledHymns(){
+        try{
+            $unfilledHymns = $this->respository->getUnfilledHymnNumbers();
+            return response()->json(['data'=>$unfilledHymns]);
+        }catch(\Exception $e){
+            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+        }
+    }
+
     public function get($id )
     {
         try {
