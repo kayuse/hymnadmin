@@ -185,7 +185,7 @@
     import axios from 'axios';
     export default {
         mounted() {
-            this.$events.listen('newRecord', eventData => this.updateRecords());
+             this.$events.listen('newRecord', eventData => this.updateRecords());
             this.axios = axios.create({
                 headers: {'apiToken': authToken}
             });

@@ -86,6 +86,13 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         };
     }
 
+    protected function updateRecord($id)
+    {
+        $record = Record::findOrFail($id);
+        $record->enabled = true;
+        $record->save();
+    }
+
     public function getHymn($number)
     {
         $hymn = $this->model->where('number', $number)->first();
@@ -99,16 +106,32 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         $hymns = $this->model->all();
         $count = 0;
         foreach ($hymns as $hymn) {
-            $hymns[$count]["verses"] = $hymn->verses()->get();
+            $verses = $hymn->verses()->get();
+            $hymns[$count]["verses"] = $this->stripVerses($verses);
             $count++;
         }
         return $hymns;
     }
 
-    public function getUnfilledHymnNumbers(){
-        $list = range(1,601);
+    protected function stripVerses($verses)
+    {
+        $strippedVerses = [];
+        $count = 0;
+        foreach ($verses as $verse) {
+            $strippedContent = $verse->getStrippedContent();
+            $currentVerse = $verse;
+            $currentVerse->strippedContent = $strippedContent;
+            array_push($strippedVerses,$currentVerse);
+            $count++;
+        }
+        return collect($strippedVerses);
+    }
+
+    public function getUnfilledHymnNumbers()
+    {
+        $list = range(1, 601);
         $hymnNumbers = $this->model->pluck('number')->toArray();
-        $unfilledHymnNumbers =  array_diff($list,$hymnNumbers);
+        $unfilledHymnNumbers = array_diff($list, $hymnNumbers);
 
         return array_values($unfilledHymnNumbers);
     }
@@ -127,12 +150,5 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         }
         $hymn->verses()->saveMany($verses);
         return $hymn;
-    }
-
-    protected function updateRecord($id)
-    {
-        $record = Record::findOrFail($id);
-        $record->enabled = true;
-        $record->save();
     }
 }
