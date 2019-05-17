@@ -12,6 +12,6 @@ class Verse extends Model
     public function getStrippedContent()
     {
         //$allowableTags = ["<div>"];
-        return strip_tags($this->content, '<br><div>');
+        return strip_tags($this->content, '<br>');
     }
 }
