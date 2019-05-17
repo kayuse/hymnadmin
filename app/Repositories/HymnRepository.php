@@ -107,6 +107,7 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         $count = 0;
         foreach ($hymns as $hymn) {
             $verses = $hymn->verses()->get();
+            $verses->makeHidden(['content']);
             $hymns[$count]["verses"] = $this->stripVerses($verses);
             $count++;
         }
