@@ -9,7 +9,9 @@ class Verse extends Model
     //
     protected $fillable = ['id', 'number', 'content', 'hymn_id'];
 
-    public function getStrippedContent(){
-        return strip_tags($this->content,'<br>');
+    public function getStrippedContent()
+    {
+        //$allowableTags = ["<div>"];
+        return strip_tags($this->content, '<br><div>');
     }
 }
