@@ -11,8 +11,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $name = str_random(10);
-        $email = str_random(10).'@gmail.com';
+        $name = rand(1000000, 99000000) . "";
+        $email = rand(1000000,99000000).'@gmail.com';
         $apiToken = md5($name . $email);
         DB::table('users')->insert([
             'name' => $name,

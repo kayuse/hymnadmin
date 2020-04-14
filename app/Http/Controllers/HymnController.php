@@ -57,15 +57,6 @@ class HymnController extends Controller
         }
     }
 
-    public function get($id )
-    {
-        try {
-           $hymn =  $this->respository->show($id);
-            return response()->json(['success' => 1, 'data' => $hymn]);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
-        }
-    }
 
     public function new(Request $request)
     {

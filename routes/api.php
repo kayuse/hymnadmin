@@ -19,21 +19,20 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::get('/user', function () {
-
-    return response()->json([$user]);
-})->middleware('auth.api');
+Route::get('/user/{id}', 'Api\UserController@get')->middleware('auth.api');
+Route::get('/auth-user/', 'Api\UserController@authUser')->middleware('auth.api');
+Route::post('/user/create', 'Api\UserController@create')->name('user.create');
 
 Route::middleware(['auth.api'])->group(function () {
     Route::post('/add-record', 'RecordController@add');
     Route::get('/fetch', 'RecordController@fetch');
     Route::get('/get/{id}', 'RecordController@get');
     Route::post('/disable', 'RecordController@disable');
-    Route::get('/hymn/get-unfilled-hymns','HymnController@getUnfilledHymns');
+    Route::get('/hymn/get-unfilled-hymns', 'HymnController@getUnfilledHymns');
     Route::post('/hymn/create-hymn', 'HymnController@createHymn');
-    Route::get('/hymn/{id}','HymnController@get');
-    Route::get('/hymn/get/{number}','HymnController@getHymn');
-    Route::post('/hymn/new','HymnController@new');
+    Route::get('/hymn/{id}', 'Api\HymnListController@get');
+    Route::get('/hymn/{number}/details', 'Api\HymnListController@details');
+    Route::post('/hymn/new', 'HymnController@new');
     Route::get('/dashboard/stats', 'DashboardController@getStats');
 });
 

@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends \TCG\Voyager\Models\User
 {
     use Notifiable;
 
@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'api_token'
     ];
 
     /**
@@ -27,4 +27,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * AppUser Details from the mobile app
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function appUser()
+    {
+        return $this->hasOne('App\AppUser', 'user_id', 'id');
+    }
 }

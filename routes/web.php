@@ -23,3 +23,8 @@ Route::get('/download-hymns','HymnController@download')->name('download');
 //Route::get('/home','DashboardController@index')->middleware('auth');
 
 Route::get('/home/{vue_capture?}', "DashboardController@index")->middleware('auth')->where('vue_capture', '[\/\w\.-]*')->name('home');
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
