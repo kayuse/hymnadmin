@@ -103,29 +103,15 @@ class HymnRepository extends BaseRepository implements IHymnRepository
 
     public function all()
     {
-        $hymns = $this->model->all();
-        $count = 0;
-        foreach ($hymns as $hymn) {
-            $verses = $hymn->verses()->get();
-            //$verses->makeHidden(['content']);
-            $hymns[$count]["verses"] = $verses;
-            $count++;
-        }
+        $hymns = $this->model->with('verses')->get();
         return $hymns;
     }
 
-    protected function stripVerses($verses)
+    public function userHymns($user)
     {
-        $strippedVerses = [];
-        $count = 0;
-        foreach ($verses as $verse) {
-            $strippedContent = $verse->getStrippedContent();
-            $currentVerse = $verse;
-            $currentVerse->strippedContent = $strippedContent;
-            array_push($strippedVerses,$currentVerse);
-            $count++;
-        }
-        return collect($strippedVerses);
+        $language = $user->appUser->language;
+        $hymns = $this->model->where('language',$language)->with('verses')->get();
+        return $hymns;
     }
 
     public function getUnfilledHymnNumbers()
@@ -151,5 +137,19 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         }
         $hymn->verses()->saveMany($verses);
         return $hymn;
+    }
+
+    protected function stripVerses($verses)
+    {
+        $strippedVerses = [];
+        $count = 0;
+        foreach ($verses as $verse) {
+            $strippedContent = $verse->getStrippedContent();
+            $currentVerse = $verse;
+            $currentVerse->strippedContent = $strippedContent;
+            array_push($strippedVerses, $currentVerse);
+            $count++;
+        }
+        return collect($strippedVerses);
     }
 }

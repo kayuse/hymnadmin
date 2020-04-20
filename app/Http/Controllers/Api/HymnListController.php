@@ -13,6 +13,14 @@ class HymnListController extends Controller
     {
         $this->repository = $repository;
     }
+    public function all(){
+        try {
+            $hymn =  $this->repository->userHymns(auth()->user());
+            return response()->json(['data' => $hymn]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+        }
+    }
 
     public function get($id )
     {
