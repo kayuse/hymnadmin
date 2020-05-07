@@ -22,10 +22,13 @@ use Illuminate\Http\Request;
 Route::get('/user/{id}', 'Api\UserController@get')->middleware('auth.api');
 Route::get('/auth-user/', 'Api\UserController@authUser')->middleware('auth.api');
 Route::post('/user/create', 'Api\UserController@create')->name('user.create');
+Route::post('/user/authenticate', 'Api\UserController@authenticate')->name('user.authenticate');
 
 Route::middleware(['auth.api'])->group(function () {
     Route::get('/hymns/all', 'Api\HymnListController@all')->name('hymns.all');
+    Route::get('/hymns/categories', 'Api\HymnListController@categories')->name('hymns.categories');
     Route::get('/sunday-school/all', 'Api\SundaySchoolController@all')->name('sunday_school.all');
+    Route::get('/sunday-school/categories', 'Api\SundaySchoolController@categories')->name('sunday_school.categories');
 });
 
 

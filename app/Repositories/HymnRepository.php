@@ -9,6 +9,7 @@
 namespace App\Repositories;
 
 use App\Hymn;
+use App\HymnCategory;
 use App\Record;
 use App\Verse;
 use Illuminate\Support\Facades\Auth;
@@ -110,8 +111,17 @@ class HymnRepository extends BaseRepository implements IHymnRepository
     public function userHymns($user)
     {
         $language = $user->appUser->language;
-        $hymns = $this->model->where('language',$language)->with('verses')->get();
+        $hymns = $this->model->with('verses')->where('language', $language)->orderBy('number', 'asc')->get();
         return $hymns;
+    }
+
+    public function categories($user = null)
+    {
+        if ($user) {
+            $language = $user->appUser->language;
+            return HymnCategory::where('language', $language)->get();
+        }
+        return HymnCategory::all();
     }
 
     public function getUnfilledHymnNumbers()

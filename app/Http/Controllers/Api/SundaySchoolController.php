@@ -20,9 +20,19 @@ class SundaySchoolController extends Controller
     {
         try {
             $data = $this->repository->all();
-            return response()->json(['data' => $data]);
+            return response()->json($data);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function categories(Request $request)
+    {
+        try {
+            $data = $this->repository->categories();
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 }

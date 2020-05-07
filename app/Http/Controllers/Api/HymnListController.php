@@ -9,28 +9,32 @@ use App\Http\Controllers\Controller;
 class HymnListController extends Controller
 {
     protected $repository;
+
     public function __construct(IHymnRepository $repository)
     {
         $this->repository = $repository;
     }
-    public function all(){
+
+    public function all()
+    {
         try {
-            $hymn =  $this->repository->userHymns(auth()->user());
-            return response()->json(['data' => $hymn]);
+            $hymn = $this->repository->userHymns(auth()->user());
+            return response()->json($hymn);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
-    public function get($id )
+    public function get($id)
     {
         try {
-            $hymn =  $this->repository->show($id);
+            $hymn = $this->repository->show($id);
             return response()->json(['success' => 1, 'data' => $hymn]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
         }
     }
+
     //
     public function details($number)
     {
@@ -39,6 +43,16 @@ class HymnListController extends Controller
             return response()->json(['success' => 1, 'data' => $hymn]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'status' => -1], 500);
+        }
+    }
+
+    public function categories()
+    {
+        try {
+            $categories = $this->repository->categories(auth()->user());
+            return response()->json($categories);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 }

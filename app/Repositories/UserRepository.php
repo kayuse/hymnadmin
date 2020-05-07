@@ -27,6 +27,6 @@ class UserRepository
 
         $user = User::create($userData);
         $appUser = $user->appUser()->create($appUserData);
-        return $user->find($user->id);
+        return User::with('appUser')->find($user->id);
     }
 }
