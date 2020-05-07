@@ -25,7 +25,16 @@ class UserController extends Controller
     public function authUser(Request $request)
     {
         $user = User::with('appUser')->find(auth()->user()->id);
-        return response()->json(['data' => $user]);
+        return response()->json($user);
+    }
+
+    public function authenticate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required'
+        ]);
+        $user = User::with('appUser')->where('email', $validatedData['email'])->first();
+        return response()->json($user);
     }
 
     //

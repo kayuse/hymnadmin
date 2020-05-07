@@ -9,6 +9,7 @@
 namespace App\Repositories;
 
 
+use App\SundaySchoolCategory;
 use App\SundaySchoolManual;
 use App\SundaySchoolTopic;
 
@@ -25,5 +26,10 @@ class SundaySchoolRepository
     {
         return $this->model->with('topics')->get();
 
+    }
+
+    public function categories()
+    {
+        return SundaySchoolCategory::all();
     }
 }
