@@ -36,4 +36,4 @@ Route::post('inspiration/update/{id}', 'Api\InspirationController@update');
 Route::delete('inspiration/delete/{id}', 'Api\InspirationController@delete');
 Route::get('daily/quotes', 'Api\InspirationDisplayController@getTodaysInspiration');
 Route::post('file', 'Api\HymnDownloadController@upload');
-Route::get('file/{hymn}/{version}', 'Api\HymnDownloadController@getFile');
+Route::get('file/{hymn}/{version}', 'Api\HymnDownloadController@download');

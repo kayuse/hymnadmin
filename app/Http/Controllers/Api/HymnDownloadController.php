@@ -11,7 +11,8 @@ class HymnDownloadController extends Controller
 {
     //
     public function upload(Request $request)
-    {if ($request->hasFile('hymn')) {
+    {
+        if ($request->hasFile('hymn')) {
             $file = $request->file('hymn');
             $name = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
@@ -26,11 +27,12 @@ class HymnDownloadController extends Controller
         return response()->json(['message' => 'failed', 'status' => false]);
     }
 
-    public function getFile($hymn, $version)
+    public function download($hymn, $version)
     {
         $found = HymnDownload::where('number', $hymn)->where('version', $version)->first();
-//        $file = Storage::disk('spaces')->get('hymns/' . $found['file']);
-//        $header = ['Content-type' => 'audio/mp3'];
-        return response()->json(['message'=>$found, 'status'=> true]);
+        $fileName = $hymn . ' ' . $version . '.png';
+        $temp = tempnam(sys_get_temp_dir(), $fileName);
+        copy('https://sgp1.digitaloceanspaces.com/hymns/hymns/' . $found['file'], $temp);
+        return response()->download($temp, $found['file']);
     }
 }
