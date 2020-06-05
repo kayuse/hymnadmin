@@ -29,6 +29,9 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/hymns/categories', 'Api\HymnListController@categories')->name('hymns.categories');
     Route::get('/sunday-school/all', 'Api\SundaySchoolController@all')->name('sunday_school.all');
     Route::get('/sunday-school/categories', 'Api\SundaySchoolController@categories')->name('sunday_school.categories');
+    Route::get('/sunday-school/topic/{id}', 'Api\SundaySchoolController@getTopic')->name('sunday_school.topic');
+    Route::post('sunday-school/add-podcast', 'Api\SundaySchoolController@addPodcast')->name('sunday_school.podcast.new');
+    Route::get('/sunday-school/download-podcast/{id}', 'Api\SundaySchoolController@downloadPodCast')->name('sunday_school.podcast.download');
 });
 
 

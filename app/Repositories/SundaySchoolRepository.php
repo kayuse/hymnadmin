@@ -25,7 +25,12 @@ class SundaySchoolRepository
     public function all()
     {
         return $this->model->with('topics')->get();
+    }
 
+    public function topic($id)
+    {
+        $topic = SundaySchoolTopic::with('podcast')->where('id', $id)->get();
+        return $topic;
     }
 
     public function categories()
