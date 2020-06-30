@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHymnAudioTable extends Migration
+class CreateHymnMediaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateHymnAudioTable extends Migration
      */
     public function up()
     {
-        Schema::create('hymn_audios', function (Blueprint $table) {
+        Schema::create('hymn_media', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('hymn_id');
             $table->string('media');

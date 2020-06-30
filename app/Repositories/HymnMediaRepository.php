@@ -2,41 +2,37 @@
 /**
  * Created by IntelliJ IDEA.
  * User: user
- * Date: 5/13/20
- * Time: 4:06 AM
+ * Date: 6/5/20
+ * Time: 10:30 AM
  */
 
 namespace App\Repositories;
 
 
-use App\Podcast;
-use App\PodcastComment;
+use App\HymnMedia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
-class PodcastRepository
+class HymnMediaRepository
 {
-    protected $errors;
     protected $s3Repository;
 
     public function __construct(S3Repository $s3Repository)
     {
-        $this->errors = [];
         $this->s3Repository = $s3Repository;
     }
 
-    public function new(Request $request)
+    public function addMedia($request)
     {
         $result = $this->upload($request);
         if (!$result) {
             return false;
         }
+        $hymnMedia = new HymnMedia();
+        $hymnMedia->hymn_id = $request->hymn;
+        $hymnMedia->media = $result;
+        $hymnMedia->save();
 
-        $podcast = new Podcast();
-        $podcast->topic_id = $request->topic;
-        $podcast->media = $result;
-        $podcast->save();
-        return $podcast;
+        return $hymnMedia;
     }
 
     protected function upload(Request $request)
@@ -49,9 +45,9 @@ class PodcastRepository
         }
 
         $extension = $media->getClientOriginalExtension();
-        $filename = 'podcast-' . time() . '.' . $extension;
+        $filename = 'hymn-' . time() . '.' . $extension;
 
-        $filePath = $this->s3Repository->upload($media, $filename, 'podcast');
+        $filePath = $this->s3Repository->upload($media, $filename, 'hymns');
         return $filePath;
     }
 
@@ -67,26 +63,5 @@ class PodcastRepository
             return false;
         }
         return true;
-    }
-
-    public function addComment($data)
-    {
-        $comment = PodcastComment::create([
-            'podcast_id' => $data['podcast_id'],
-            'text' => $data['text'],
-            'user_id' => $data['user_id']
-        ]);
-        return $comment;
-    }
-
-    public function download($id)
-    {
-        $podcast = Podcast::get($id);
-        return $this->s3Repository->download($podcast->media);
-    }
-
-    public function getErrors()
-    {
-        return $this->errors;
     }
 }

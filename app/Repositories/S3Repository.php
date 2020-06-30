@@ -31,13 +31,12 @@ class S3Repository
         $this->space = new \SpacesConnect($this->key, $this->secret, $this->name, $this->region);
     }
 
-    public function upload(UploadedFile $file, $folder)
+    public function upload(UploadedFile $file, $filename, $folder)
     {
         if (App::environment('local')) {
-           // return $file;
+            // return $file;
         }
-        //$fileSections = explode('/', $path);
-        $filename = 'podcast-' . time() . '.' . $file->getClientOriginalExtension();
+
         $filepath = $folder . '/' . $filename;
         $this->space->UploadFile($file, 'public', $filepath);
         return $filepath;
