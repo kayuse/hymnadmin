@@ -32,6 +32,17 @@ class HymnMediaController extends Controller
         }
     }
 
+    public function get(Request $request, $mediaId)
+    {
+        try {
+            $hymnAudio = HymnMedia::find($mediaId);
+            $hymnAudio->download_url = 'https://' . strtolower(env('DO_REGION')) . '.digitaloceanspaces.com/' . env('DO_BUCKET') . '/' . $hymnAudio->media;
+            return response()->json($hymnAudio);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
     public function add(Request $request)
     {
         try {
