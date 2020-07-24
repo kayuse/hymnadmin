@@ -16,7 +16,6 @@ class UserRepository
 {
     public function create(array $data)
     {
-
         $userData = array('name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['email']),
