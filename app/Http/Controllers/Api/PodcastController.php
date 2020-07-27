@@ -37,10 +37,11 @@ class PodcastController extends Controller
     {
         try {
             $podcast = Podcast::where('topic_id', $podcastId)->first();
-            //dd(env('DO_REGION'));
+            if ($podcast == null) {
+                return response()->json($podcast);
+            }
             $podcast->media_url = 'https://' . strtolower(env('DO_REGION')) . '.digitaloceanspaces.com/' . env('DO_BUCKET') . '/' . $podcast->media;
             return response()->json($podcast);
-
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

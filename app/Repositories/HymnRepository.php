@@ -111,7 +111,6 @@ class HymnRepository extends BaseRepository implements IHymnRepository
 
     public function userHymns($user)
     {
-        
         $language = AppUser::where('user_id',$user->id)->first()->language;
         $hymns = $this->model->with('verses')->where('language', $language)->orderBy('number', 'asc')->get();
         return $hymns;
