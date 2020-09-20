@@ -19,7 +19,7 @@ class UserController extends Controller
     public function get(Request $request, $id)
     {
         $user = User::with('appUser')->find($id);
-        return response()->json(['data' => $user]);
+        return response()->json($user);
     }
 
     public function authUser(Request $request)
@@ -50,6 +50,14 @@ class UserController extends Controller
         ]);
 
         $user = $this->repository->create($validatedData);
+        return response()->json($user);
+    }
+
+    public function hasLatestUpdate(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->appUser->has_latest_updates = 1;
+        $user->appUser->save();
         return response()->json($user);
     }
 }

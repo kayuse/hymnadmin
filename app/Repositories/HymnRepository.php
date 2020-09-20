@@ -120,7 +120,7 @@ class HymnRepository extends BaseRepository implements IHymnRepository
     {
         if ($user) {
             $language = $user->appUser->language;
-            return HymnCategory::where('language', $language)->get();
+            return HymnCategory::where('language', 'yoruba')->get();
         }
         return HymnCategory::all();
     }

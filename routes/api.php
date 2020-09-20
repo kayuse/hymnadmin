@@ -25,7 +25,8 @@ Route::post('/user/create', 'Api\UserController@create')->name('user.create');
 Route::post('/user/authenticate', 'Api\UserController@authenticate')->name('user.authenticate');
 
 Route::middleware(['auth.api'])->group(function () {
-    Route::get('/hymns/all', 'Api\HymnListController@all')->name('hymns.all');
+    Route::post('user/{id}/has-latest-update/', 'Api\UserController@hasLatestUpdate')->name('user.has_latest_update');
+    Route::get('/hymns/all/{language?}', 'Api\HymnListController@all')->name('hymns.all');
     Route::get('/hymns/{id}/download', 'Api\HymnMediaController@download')->name('hymns.download');
     Route::get('/hymns/categories', 'Api\HymnListController@categories')->name('hymns.categories');
     Route::get('/hymns/media/{hymnId}', 'Api\HymnMediaController@list')->name('hymns.media');

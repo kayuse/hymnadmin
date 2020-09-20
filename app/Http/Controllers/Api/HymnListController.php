@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Hymn;
 use App\Repositories\IHymnRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,11 +16,15 @@ class HymnListController extends Controller
         $this->repository = $repository;
     }
 
-    public function all()
+    public function all($language = null)
     {
         try {
-            $hymn = $this->repository->userHymns(auth()->user());
-            return response()->json($hymn);
+            if ($language == null) {
+                $hymns = $this->repository->userHymns(auth()->user());
+            } else {
+                $hymns = Hymn::where('language', $language)->with('verses')->orderBy('number', 'asc')->get();
+            }
+            return response()->json($hymns);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
