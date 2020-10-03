@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 class HymnMediaRepository
 {
     protected $s3Repository;
+    protected $errors = [];
 
     public function __construct(S3Repository $s3Repository)
     {
