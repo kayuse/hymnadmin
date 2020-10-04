@@ -60,11 +60,12 @@ class HymnMediaRepository
             return false;
         }
         $file = $request->file('media');
-        if (!$file->isValid()) {
+        /*if (!$file->isValid()) {
+
             array_push($this->errors, 'This media is invalid');
             dd('error2');
             return false;
-        }
+        }*/
         return true;
     }
 
