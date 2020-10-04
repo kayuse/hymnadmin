@@ -56,7 +56,6 @@ class HymnMediaRepository
     {
         if (!$request->file('media')) {
             array_push($this->errors, 'The media valid doesn\'t exist');
-            dd('error1');
             return false;
         }
         $file = $request->file('media');
