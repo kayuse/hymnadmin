@@ -47,6 +47,9 @@ class HymnMediaController extends Controller
     {
         try {
             $media = $this->repository->addMedia($request);
+            if ($media == false) {
+                return response()->json($this->repository->getErrors());
+            }
             return response()->json($media);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);
