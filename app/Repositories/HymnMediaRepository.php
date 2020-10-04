@@ -56,13 +56,20 @@ class HymnMediaRepository
     {
         if (!$request->file('media')) {
             array_push($this->errors, 'The media valid doesn\'t exist');
+            dd('error1');
             return false;
         }
         $file = $request->file('media');
         if (!$file->isValid()) {
             array_push($this->errors, 'This media is invalid');
+            dd('error2');
             return false;
         }
         return true;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }
