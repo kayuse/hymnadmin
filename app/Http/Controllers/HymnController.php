@@ -58,6 +58,7 @@ class HymnController extends Controller
     }
 
 
+
     public function new(Request $request)
     {
         try {

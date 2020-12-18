@@ -8,7 +8,7 @@
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
             <div class="container px-4">
                 <a class="navbar-brand" href="../index.html">
-                    <img src="{{asset('img/brand/white.png')}}" />
+
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -42,7 +42,7 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-6">
                             <h1 class="text-white">Welcome!</h1>
-                            <p class="text-lead text-light">Sign in to the Hymn Admin Section</p>
+                            <p class="text-lead text-light">Sign in to the Staff Admin Section</p>
                         </div>
                     </div>
                 </div>
@@ -58,19 +58,6 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-7">
                     <div class="card bg-secondary shadow border-0">
-                        <div class="card-header bg-transparent pb-5">
-                            <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
-                            <div class="btn-wrapper text-center">
-                                <a href="#" class="btn btn-neutral btn-icon">
-                                    <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
-                                    <span class="btn-inner--text">Github</span>
-                                </a>
-                                <a href="#" class="btn btn-neutral btn-icon">
-                                    <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                                    <span class="btn-inner--text">Google</span>
-                                </a>
-                            </div>
-                        </div>
                         <div class="card-body px-lg-5 py-lg-5">
                             @if(!empty($errors->first()))
                                 <div class="row col-lg-12">
@@ -132,22 +119,22 @@
             <div class="row align-items-center justify-content-xl-between">
                 <div class="col-xl-6">
                     <div class="copyright text-center text-xl-left text-muted">
-                        &copy; 2019 <a href="#" class="font-weight-bold ml-1" target="_blank">Ecwa Agege IT</a>
+                        &copy; {{ now()->year }} <a href="#" class="font-weight-bold ml-1" target="_blank">Ilanaa Inc</a>
                     </div>
                 </div>
                 <div class="col-xl-6">
                     <ul class="nav nav-footer justify-content-center justify-content-xl-end">
                         <li class="nav-item">
-                            <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+                            <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Media Center</a>
                         </li>
                         <li class="nav-item">
-                            <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
+                            <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">Android</a>
                         </li>
                         <li class="nav-item">
-                            <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
+                            <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">IOS</a>
                         </li>
                         <li class="nav-item">
-                            <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
+                            <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">Super Admin</a>
                         </li>
                     </ul>
                 </div>

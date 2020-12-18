@@ -42,6 +42,26 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         return $response;
     }
 
+    public function edit($id, $data)
+    {
+        $hymn = Hymn::find($id);
+
+        $hymn->number = $data['number'];
+        $hymn->extra = $data['extra'];
+        $hymn->title = $data['title'];
+        $hymn->chorus = $data['chorus'];
+        foreach ($hymn->verses as $index => $verse) {
+            $content = $data['verses'][$index];
+            if ($content == null) {
+                $verse->forceDelete();
+            }
+            $verse->content = $content;
+            $verse->save();
+        }
+        $hymn->save();
+        return $hymn;
+    }
+
     public function saveHymn($data, $recordId = null)
     {
         $hymn = $this->model->where('number', $data['number'])->first();
@@ -111,7 +131,7 @@ class HymnRepository extends BaseRepository implements IHymnRepository
 
     public function userHymns($user)
     {
-        $language = AppUser::where('user_id',$user->id)->first()->language;
+        $language = AppUser::where('user_id', $user->id)->first()->language;
         $hymns = $this->model->with('verses')->orderBy('number', 'asc')->get();
         return $hymns;
     }
@@ -143,6 +163,22 @@ class HymnRepository extends BaseRepository implements IHymnRepository
             $newVerse = new Verse([
                 'number' => $verse["number"],
                 'content' => $verse["content"]
+            ]);
+            array_push($verses, $newVerse);
+        }
+        $hymn->verses()->saveMany($verses);
+        return $hymn;
+    }
+
+    public function newHymn($data)
+    {
+        $data["user_id"] = Auth::user()->id;
+        $hymn = $this->create($data);
+        $verses = [];
+        foreach ($data['verses'] as $index => $verse) {
+            $newVerse = new Verse([
+                'number' => $index + 1,
+                'content' => $verse
             ]);
             array_push($verses, $newVerse);
         }
