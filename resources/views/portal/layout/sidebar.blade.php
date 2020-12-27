@@ -15,7 +15,8 @@
                     <!-- Nav items -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link @if(url()->current() == route('portal.dashboard')) active @endif" href="{{route('portal.dashboard')}}">
+                            <a class="nav-link @if(url()->current() == route('portal.dashboard')) active @endif"
+                               href="{{route('portal.dashboard')}}">
                                 <i class="ni ni-tv-2 text-primary"></i>
                                 <span class="nav-link-text">Dashboard</span>
                             </a>
@@ -28,13 +29,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="map.html">
+                            <a class="nav-link  @if(url()->current() == route('portal.sundayschool.all')) active @endif"
+                               href="{{route('portal.sundayschool.all')}}">
                                 <i class="ni ni-book-bookmark text-primary"></i>
                                 <span class="nav-link-text">Sunday School</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="profile.html">
+                            <a class="nav-link  @if(url()->current() == route('portal.sundayschool.all')) active @endif"
+                               href="{{route('portal.sundayschool.all')}}">
                                 <i class="ni ni-sound-wave text-yellow"></i>
                                 <span class="nav-link-text">Flow</span>
                             </a>

@@ -38,6 +38,16 @@ Route::middleware(['auth'])->group(function () {
          * Sunday School Details route
          */
         Route::get('sunday-school/', 'Portal\SundaySchoolController@index')->name('portal.sundayschool.all');
+        Route::get('sunday-school/lessons/{id}', 'Portal\SundaySchoolController@manuals')->name('portal.sundayschool.manuals.all');
+        Route::get('sunday-school/new-manual/', 'Portal\SundaySchoolController@new')->name('portal.sundayschool.manuals.new.get');
+        Route::post('sunday-school/new-manual', 'Portal\SundaySchoolController@create')->name('portal.sundayschool.manuals.new.post');
+        Route::get('sunday-school/topic/details/{id}', 'Portal\SundaySchoolController@details')->name('portal.sundayschool.topic.details');
+        Route::get('sunday-school/topic/edit/{id}', 'Portal\SundaySchoolController@editTopic')->name('portal.sundayschool.topic.edit.get');
+        Route::post('sunday-school/topic/edit/{id}', 'Portal\SundaySchoolController@postEditTopic')->name('portal.sundayschool.topic.edit.post');
+        Route::get('sunday-school/new-lesson/{id}', 'Portal\SundaySchoolController@newTopic')->name('portal.sundayschool.topic.new.get');
+        Route::post('sunday-school/new-lesson/{id}', 'Portal\SundaySchoolController@postNewTopic')->name('portal.sundayschool.topic.new.post');
+        Route::get('sunday-school/podcast/{id}/upload', 'Portal\SundaySchoolController@viewPodcastUpload')->name('portal.sundayschool.upload.get');
+        Route::post('sunday-school/podcast/{id}/upload', 'Portal\SundaySchoolController@podcastUpload')->name('portal.sundayschool.upload.post');
         Route::get('download/{file}', 'S3Controller@download')->name('portal.download');
     });
 

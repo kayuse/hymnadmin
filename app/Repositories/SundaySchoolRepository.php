@@ -33,6 +33,29 @@ class SundaySchoolRepository
         return $topic;
     }
 
+    public function editSundaySchool($id, $data)
+    {
+        $topic = SundaySchoolTopic::find($id);
+        $topic->topic = $data['topic'];
+        $topic->aim = $data['aim'];
+        $topic->number = $data['number'];
+        $topic->bible_text = $data['bible_text'];
+        $topic->category = $data['category'];
+        $topic->introduction = $data['introduction'];
+        $topic->content = $data['content'];
+
+        $topic->save();
+        return $topic;
+    }
+
+    public function newManual($data)
+    {
+        return $this->model->create($data);
+    }
+    public function newTopic($data){
+        $lesson = SundaySchoolTopic::create($data);
+        return $lesson;
+    }
     public function categories()
     {
         return SundaySchoolCategory::all();
