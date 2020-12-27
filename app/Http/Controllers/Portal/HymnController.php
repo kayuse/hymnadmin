@@ -26,7 +26,7 @@ class HymnController extends Controller
     //
     public function index(Request $request)
     {
-        $hymns = Hymn::paginate(self::COUNT);
+        $hymns = Hymn::orderBy('number', 'asc')->paginate(self::COUNT);
         $data = compact('hymns');
         return view('portal.hymns.hymns', $data);
     }
@@ -42,7 +42,9 @@ class HymnController extends Controller
     {
         return view('portal.hymns.new');
     }
-    public function new(Request $request){
+
+    public function new(Request $request)
+    {
         $validatedData = $request->validate([
             'title' => 'required|string',
             'number' => 'required|integer',
@@ -56,6 +58,7 @@ class HymnController extends Controller
         }
         return back()->with('error', 'Error in running edits, kindly try again or contact support admin');
     }
+
     public function viewEdit(Request $request, $id)
     {
         $hymn = Hymn::find($id);
