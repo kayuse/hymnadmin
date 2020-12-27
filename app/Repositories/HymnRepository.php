@@ -50,14 +50,21 @@ class HymnRepository extends BaseRepository implements IHymnRepository
         $hymn->extra = $data['extra'];
         $hymn->title = $data['title'];
         $hymn->chorus = $data['chorus'];
+
         foreach ($hymn->verses as $index => $verse) {
-            $content = $data['verses'][$index];
-            if ($content == null) {
-                $verse->forceDelete();
-            }
-            $verse->content = $content;
-            $verse->save();
+            $verse->forceDelete();
         }
+        $verses = [];
+        $verseNumber = 1;
+        foreach ($data['verses'] as $verse) {
+            $verse = new Verse([
+                'number' => $verseNumber,
+                'content' => $verse
+            ]);
+            array_push($verses, $verse);
+            $verseNumber++;
+        }
+        $hymn->verses()->saveMany($verses);
         $hymn->save();
         return $hymn;
     }

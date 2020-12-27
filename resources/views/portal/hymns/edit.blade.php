@@ -30,7 +30,7 @@
                             <h3 class="mb-0">Edit profile </h3>
                         </div>
                         <div class="col-4 text-right">
-                            <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+                            <a href="#!" class="btn btn-sm btn-primary" id="addVerse">Add Verse</a>
                         </div>
                     </div>
                 </div>
@@ -93,15 +93,17 @@
                         <hr class="my-4"/>
                         <!-- Description -->
                         <h6 class="heading-small text-muted mb-4">Verses</h6>
-                        @foreach($hymn->verses as $verse)
-                            <div class="pl-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label">Verse {{$verse->number}}</label>
-                                    <textarea name="verses[]" id="verseeditor{{$verse->number}}"
-                                              style="height: 200px;"></textarea>
+                        <div id="versesCtn">
+                            @foreach($hymn->verses as $verse)
+                                <div class="pl-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Verse {{$verse->number}}</label>
+                                        <textarea name="verses[]" id="verseeditor{{$verse->number}}"
+                                                  style="height: 200px;"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group" style="float: right !important;">
@@ -126,13 +128,15 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/23.1.0/classic/ckeditor.js"></script>
     <script>
+        verseEditorCount = parseInt("{{$hymn->verses->count()}}")
+        var editors = []
         ClassicEditor
             .create(document.querySelector('#choruseditor')).then(editor => {
             editor.setData('{!! $hymn->chorus !!}')
         }).catch(error => {
             console.error(error);
         });
-        @foreach($hymn->verses as $verse)
+        @foreach($hymn->verses as $index=>$verse)
         ClassicEditor
             .create(document.querySelector('#verseeditor{{$verse->number}}')).then(editor => {
             editor.setData('{!! $verse->content !!}')
@@ -140,6 +144,35 @@
             console.error(error);
         });
         @endforeach
+            $("#addVerse").click(function () {
+            verseEditorCount++;
+            verseHtml = `<div class="pl-lg-4" id="verseCtn${verseEditorCount}">
+                <div class="form-group">
+                <label class="form-control-label">New Verse </label>
+                <textarea name="verses[]" id="verseeditor${verseEditorCount}" class="verses"
+            style="height: 200px;"></textarea>
+                </div>
+                <div>
+                <a href="#!" class="btn btn-sm btn-primary removeVerse" data-id='${verseEditorCount}'>Remove Verse</a>
+            </div>
+             <hr/>
+            </div>`;
+            $("#versesCtn").append(verseHtml)
+            var ceditor = ClassicEditor
+                .create(document.querySelector(`#verseeditor${verseEditorCount}`)).then(editor => {
+                    editor.setData('');
+                    var currentEditor = {
+                        key: `editor${verseEditorCount}`,
+                        editor: editor
+                    }
+                    editors.push(currentEditor)
+                }).catch(error => {
+                    console.error(error);
+                });
+
+
+        })
+
     </script>
 @endsection
 
