@@ -33,6 +33,10 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/hymns/media-details/{mediaId}', 'Api\HymnMediaController@get')->name('hymns.media.get');
     Route::post('/hymns/media/add', 'Api\HymnMediaController@add')->name('hymns.add');
     Route::get('/sunday-school/all', 'Api\SundaySchoolController@all')->name('sunday_school.all');
+    Route::post('/sunday-school/pay', 'Api\SundaySchoolController@pay')->name('sunday_school.pay');
+    Route::post('/sunday-school/request-copy', 'Api\SundaySchoolController@requestCopy')->name('sunday_school.pay');
+    Route::get('/sunday-school/paid-manuals', 'Api\SundaySchoolController@paidManuals')->name('sunday_school.manuals.paid');
+    Route::get('/sunday-school/unpaid', 'Api\SundaySchoolController@unpaid')->name('sunday_school.unpaid');
     Route::get('/sunday-school/categories', 'Api\SundaySchoolController@categories')->name('sunday_school.categories');
     Route::get('/sunday-school/topic/{id}', 'Api\SundaySchoolController@getTopic')->name('sunday_school.topic');
     Route::get('/sunday-school/podcast-media/{podcastId}', 'Api\PodcastController@getPodCastMedia')->name('sunday_school.podcast.get');
