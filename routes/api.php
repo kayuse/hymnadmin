@@ -40,6 +40,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/sunday-school/categories', 'Api\SundaySchoolController@categories')->name('sunday_school.categories');
     Route::get('/sunday-school/topic/{id}', 'Api\SundaySchoolController@getTopic')->name('sunday_school.topic');
     Route::get('/sunday-school/podcast-media/{podcastId}', 'Api\PodcastController@getPodCastMedia')->name('sunday_school.podcast.get');
+    Route::get('/sunday-school/podcasts/{topicId}', 'Api\PodcastController@getPodcasts')->name('sunday_school.podcasts.get');
     Route::post('sunday-school/add-podcast', 'Api\PodcastController@addPodcast')->name('sunday_school.podcast.new');
     Route::post('sunday-school/podcast/add-comment', 'Api\PodcastCommentController@addComment')->name('podcast.add_comment');
     Route::get('sunday-school/podcast/{id}/comments', 'Api\PodcastCommentController@getComments')->name('podcast.add_comment');

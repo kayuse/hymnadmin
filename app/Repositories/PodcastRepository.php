@@ -85,6 +85,13 @@ class PodcastRepository
         return $this->s3Repository->download($podcast->media);
     }
 
+    public function podcasts($topicId)
+    {
+        $pod = Podcast::where('topic_id', $topicId)->first();
+        //dd($pod->media);
+        return Podcast::where('topic_id', $topicId)->get();
+    }
+
     public function getErrors()
     {
         return $this->errors;

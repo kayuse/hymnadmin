@@ -75,7 +75,6 @@ class SundaySchoolController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-
     public function pay(Request $request)
     {
         try {

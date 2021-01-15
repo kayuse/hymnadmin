@@ -47,6 +47,17 @@ class PodcastController extends Controller
         }
     }
 
+    public function getPodcasts(Request $request, $topicId)
+    {
+        try {
+            $podcasts = $this->podcastRepository->podcasts($topicId);
+            return response()->json($podcasts);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
     public function downloadPodCast(Request $request, $id)
     {
 
