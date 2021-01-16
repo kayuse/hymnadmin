@@ -42,6 +42,7 @@
                                 <th scope="col" class="sort" data-sort="status">Title</th>
                                 <th scope="col" class="sort" data-sort="budget">Language</th>
                                 <th scope="col" class="sort" data-sort="status">Extra</th>
+                                <th scope="col" class="sort" data-sort="status">Number</th>
                                 <th scope="col" class="sort" data-sort="status">No Of Verses</th>
                                 <th scope="col" class="sort" data-sort="status">Action</th>
                             </tr>
@@ -66,6 +67,9 @@
                                     </td>
                                     <td>
                                         {{$hymn->extra}}
+                                    </td>
+                                    <td>
+                                        {{$hymn->number}}
                                     </td>
                                     <td>
                                         <span class="badge badge-primary"> {{$hymn->verses->count()}}</span>
