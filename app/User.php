@@ -27,7 +27,6 @@ class User extends \TCG\Voyager\Models\User
     protected $hidden = [
         'password', 'remember_token',
     ];
-
     /**
      * AppUser Details from the mobile app
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

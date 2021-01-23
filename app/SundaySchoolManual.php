@@ -19,6 +19,8 @@ class SundaySchoolManual extends Model
         return $this->hasMany('App\SundaySchoolTopic', 'manual_id', 'id');
     }
 
+
+
     public function isPaid($id)
     {
         $result = $this->userSundaySchoolManuals()->where('user_sunday_school_manuals.user_id', $id)->where('user_sunday_school_manuals.manual_id', $this->id)->first();

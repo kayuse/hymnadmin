@@ -38,7 +38,12 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/sunday-school/paid-manuals', 'Api\SundaySchoolController@paidManuals')->name('sunday_school.manuals.paid');
     Route::get('/sunday-school/unpaid', 'Api\SundaySchoolController@unpaid')->name('sunday_school.unpaid');
     Route::get('/sunday-school/categories', 'Api\SundaySchoolController@categories')->name('sunday_school.categories');
+    Route::get('/sunday-school/user-manual/{id}', 'Api\SundaySchoolController@userManual')->name('sunday_school.manual');
     Route::get('/sunday-school/topic/{id}', 'Api\SundaySchoolController@getTopic')->name('sunday_school.topic');
+    Route::post('/sunday-school/assign/{id}', 'Api\SundaySchoolController@assign')->name('sunday_school.assign');
+    Route::post('/sunday-school/claim/{id}', 'Api\SundaySchoolController@claim')->name('sunday_school.claim');
+    Route::post('/sunday-school/revoke/{id}', 'Api\SundaySchoolController@revoke')->name('sunday_school.revoke');
+    Route::get('/sunday-school/recipients/{id}', 'Api\SundaySchoolController@getRecipients')->name('sunday_school.recipients.get');
     Route::get('/sunday-school/podcast-media/{podcastId}', 'Api\PodcastController@getPodCastMedia')->name('sunday_school.podcast.get');
     Route::get('/sunday-school/podcasts/{topicId}', 'Api\PodcastController@getPodcasts')->name('sunday_school.podcasts.get');
     Route::post('sunday-school/add-podcast', 'Api\PodcastController@addPodcast')->name('sunday_school.podcast.new');

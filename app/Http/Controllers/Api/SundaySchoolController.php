@@ -8,6 +8,8 @@ use App\Repositories\PodcastRepository;
 use App\Repositories\S3Repository;
 use App\Repositories\SundaySchoolRepository;
 use App\RequestCopy;
+use App\SundaySchoolManual;
+use App\UserSundaySchoolManual;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,6 +47,65 @@ class SundaySchoolController extends Controller
         }
     }
 
+    public function assign(Request $request, $id)
+    {
+        try {
+            $validatedData = $request->validate([
+                'emails' => "required|array"
+            ]);
+            $data = $this->repository->assign($id, $request->emails, Auth::user());
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function claim(Request $request, $id)
+    {
+        try {
+            $data = $this->repository->claim($id, Auth::user());
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getRecipients(Request $request, $id)
+    {
+        try {
+
+            $data = $this->repository->getSponsored($id, Auth::user());
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function userManual(Request $request, $id)
+    {
+        try {
+
+            $data = UserSundaySchoolManual::where('manual_id', $id)->where('user_id', Auth::user()->id)->first();
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+
+    }
+
+    public function revoke(Request $request, $id)
+    {
+        try {
+            $validatedData = $request->validate([
+                'email' => "required"
+            ]);
+            $data = $this->repository->revoke($id, $request->email, Auth::user());
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
     public function requestCopy(Request $request)
     {
         $validatedData = $request->validate([
@@ -69,12 +130,13 @@ class SundaySchoolController extends Controller
     {
         try {
             $userId = auth()->user()->id;
-            $data = $this->repository->getUnpaidManuals($userId);
+            $data = $this->repository->getUnpaidManuals($userId, auth()->user()->email);
             return response()->json($data);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
     public function pay(Request $request)
     {
         try {
