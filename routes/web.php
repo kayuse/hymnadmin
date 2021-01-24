@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('sunday-school/new-lesson/{id}', 'Portal\SundaySchoolController@postNewTopic')->name('portal.sundayschool.topic.new.post');
         Route::get('sunday-school/podcast/{id}/upload', 'Portal\SundaySchoolController@viewPodcastUpload')->name('portal.sundayschool.upload.get');
         Route::post('sunday-school/podcast/{id}/upload', 'Portal\SundaySchoolController@podcastUpload')->name('portal.sundayschool.upload.post');
+
+        Route::get('flow/','Portal\SundaySchoolController@index')->name('portal.flow');
         Route::get('download/{file}', 'S3Controller@download')->name('portal.download');
     });
 

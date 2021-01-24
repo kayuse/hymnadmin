@@ -36,7 +36,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  @if(url()->current() == route('portal.sundayschool.all')) active @endif"
+                            <a class="nav-link  @if(url()->current() == route('portal.flow')) active @endif"
                                href="{{route('portal.sundayschool.all')}}">
                                 <i class="ni ni-sound-wave text-yellow"></i>
                                 <span class="nav-link-text">Flow</span>

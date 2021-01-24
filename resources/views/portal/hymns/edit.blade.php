@@ -132,14 +132,14 @@
         var editors = []
         ClassicEditor
             .create(document.querySelector('#choruseditor')).then(editor => {
-            editor.setData('{!! $hymn->chorus !!}')
+            editor.setData(`{!! $hymn->chorus !!}`)
         }).catch(error => {
             console.error(error);
         });
         @foreach($hymn->verses as $index=>$verse)
         ClassicEditor
             .create(document.querySelector('#verseeditor{{$verse->number}}')).then(editor => {
-            editor.setData('{!! $verse->content !!}')
+            editor.setData(`{!! $verse->content !!}`)
         }).catch(error => {
             console.error(error);
         });

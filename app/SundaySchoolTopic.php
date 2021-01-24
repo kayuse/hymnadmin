@@ -19,8 +19,6 @@ class SundaySchoolTopic extends Model
     public function escapedIntroduction()
     {
         $introduction = $this->introduction;
-        $introduction = str_replace('"', "'", $introduction);
-
         return $introduction;
 
     }

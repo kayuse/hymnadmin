@@ -135,8 +135,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/23.1.0/classic/ckeditor.js"></script>
     <script>
-        var introduction = "{!! $topic->escapedIntroduction() !!}";
-        var content = "{!! $topic->escapedContent() !!}";
+
+        var introduction = `{!! $topic->escapedIntroduction() !!}`;
+        var content = `{!! $topic->escapedContent() !!}`;
         ClassicEditor
             .create(document.querySelector('#introduction')).then(editor => {
             editor.setData(introduction)
